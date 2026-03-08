@@ -1,11 +1,12 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger as honoLogger } from 'hono/logger'
+import { apiReference } from '@scalar/hono-api-reference'
 import { userController } from './controllers/user.controller'
 import { authMiddleware } from './middlewares/auth.middleware'
 import { HttpException } from './exceptions/http-exceptions'
 import { logger } from './core/logger'
-import { startCleanupCron } from './crons/cleanup.cron'
+import { openApiSpec } from './openapi'
 
 const app = new Hono()
 
@@ -15,6 +16,10 @@ app.use('*', honoLogger())
 
 // ─── Health Check ───────────────────────────────────────────────────────────
 app.get('/health', (c) => c.json({ status: 'ok', timestamp: new Date().toISOString() }))
+
+// ─── OpenAPI Spec & Scalar Docs ──────────────────────────────────────────────
+app.get('/openapi.json', (c) => c.json(openApiSpec))
+app.get('/docs', apiReference({ url: '/openapi.json' }))
 
 // ─── Public Auth Routes ──────────────────────────────────────────────────────
 app.route('/auth', userController)
@@ -44,9 +49,7 @@ app.onError((err, c) => {
 app.notFound((c) => c.json({ success: false, error: 'Route not found' }, 404))
 
 // ─── Crons ───────────────────────────────────────────────────────────────────
-if (process.env.NODE_ENV !== 'test') {
-  startCleanupCron()
-}
+// Removed as requested
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 const port = Number(process.env.PORT) || 3000
