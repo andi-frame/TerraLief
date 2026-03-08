@@ -1,39 +1,15 @@
 import { useState } from 'react'
 import './App.css'
+import Navbar from './component/Navbar'
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAccessMenuOpen, setIsAccessMenuOpen] = useState(true)
 
   return (
     <div className="home-page">
+      <Navbar />
+
       <header className="hero-section">
-        <div className={`top-nav ${isMenuOpen ? 'expanded' : ''}`}>
-          <div className="top-nav-bar">
-            <button className="logo-mark" type="button" aria-label="TerraLief home">
-              ✶
-            </button>
-            <button
-              className="menu-toggle"
-              type="button"
-              onClick={() => setIsMenuOpen((previous) => !previous)}
-              aria-expanded={isMenuOpen}
-              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            >
-              {isMenuOpen ? '✕' : '☰'}
-            </button>
-          </div>
-
-          {isMenuOpen && (
-            <nav className="top-nav-menu" aria-label="Main navigation">
-              <a href="#">Home</a>
-              <a href="#">Shelters</a>
-              <a href="#">Routes</a>
-              <button type="button">Sign Up</button>
-            </nav>
-          )}
-        </div>
-
         <div className="hero-content">
           <h1>What’s Happening Around You?</h1>
           <p>

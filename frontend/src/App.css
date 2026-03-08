@@ -7,86 +7,13 @@
 .hero-section {
   position: relative;
   padding: 1.125rem;
-  padding-top: 4.25rem;
+  padding-top: 7.25rem;
   background:
-    linear-gradient(to bottom, rgba(11, 28, 35, 0.55), rgba(248, 248, 248, 0.92) 62%, #f8f8f8),
-    radial-gradient(circle at 20% 15%, #6d8f74 0%, #2f4a39 38%, #223328 68%, #15211b 100%);
-}
-
-.top-nav {
-  width: min(370px, calc(100vw - 2.25rem));
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background: var(--color-neutral-900);
-  border-radius: 2.75rem;
-  color: #fff;
-  overflow: hidden;
-}
-
-.top-nav-bar {
-  width: 100%;
-  min-height: 74px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1.75rem;
-}
-
-.logo-mark,
-.menu-toggle {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-}
-
-.logo-mark {
-  font-size: 3.1rem;
-  line-height: 1;
-}
-
-.menu-toggle {
-  font-size: 2rem;
-  line-height: 1;
-}
-
-.top-nav.expanded {
-  min-height: 610px;
-  justify-content: flex-start;
-  border-radius: 3rem;
-}
-
-.top-nav-menu {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2rem;
-  padding: 2.25rem 3rem 2.75rem;
-}
-
-.top-nav-menu a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 2.1rem;
-  line-height: 1.2;
-}
-
-.top-nav-menu button {
-  width: 100%;
-  margin-top: auto;
-  border: 0;
-  border-radius: 9999px;
-  background: #f2f2f2;
-  color: #000;
-  font-size: 2.1rem;
-  line-height: 1.1;
-  padding: 1.05rem 1.5rem;
-  cursor: pointer;
+    linear-gradient(to bottom, rgba(10, 33, 24, 0.68), rgba(23, 64, 44, 0.42), rgba(248, 248, 248, 0.92) 68%, #f8f8f8),
+    url('/Image_01.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-content {
@@ -392,20 +319,6 @@ footer {
 @media (max-width: 640px) {
   .home-page {
     font-size: 8px;
-  }
-
-  .top-nav.expanded {
-    min-height: 390px;
-  }
-
-  .top-nav-menu {
-    gap: 1.25rem;
-    padding: 1rem 2rem 1.7rem;
-  }
-
-  .top-nav-menu a,
-  .top-nav-menu button {
-    font-size: 1.1rem;
   }
 
   .hero-content {

@@ -1,0 +1,124 @@
+.site-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding: 1rem 1rem 0;
+  pointer-events: none;
+}
+
+.site-navbar__inner {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: rgba(61, 61, 61, 0.92);
+  color: #fff;
+  border-radius: 2rem;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+}
+
+.site-navbar__inner.is-open {
+  border-radius: 2.75rem;
+}
+
+.site-navbar__bar {
+  width: 100%;
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.4rem;
+  background: transparent;
+  color: inherit;
+}
+
+.site-navbar__logo,
+.site-navbar__toggle {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.site-navbar__logo {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.site-navbar__toggle {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.site-navbar__panel {
+  display: flex;
+  width: 100%;
+  min-height: 610px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+  background: transparent;
+  color: inherit;
+  padding: 1.2rem 3rem 2.75rem;
+}
+
+.site-navbar__panel a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 2.1rem;
+  line-height: 1.2;
+}
+
+.site-navbar__panel button {
+  width: 100%;
+  margin-top: auto;
+  border: 0;
+  border-radius: 9999px;
+  background: #f2f2f2;
+  color: #000;
+  font-size: 2.1rem;
+  line-height: 1.1;
+  padding: 1.05rem 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .site-navbar {
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  .site-navbar__bar {
+    min-height: 64px;
+  }
+
+  .site-navbar__panel {
+    min-height: 390px;
+    gap: 1.25rem;
+    padding: 0.45rem 2rem 1.7rem;
+  }
+
+  .site-navbar__inner,
+  .site-navbar__inner.is-open {
+    border-radius: 1.6rem;
+  }
+
+  .site-navbar__panel a,
+  .site-navbar__panel button {
+    font-size: 1.2rem;
+  }
+
+  .site-navbar__logo {
+    font-size: 2.4rem;
+  }
+
+  .site-navbar__toggle {
+    font-size: 1.65rem;
+  }
+}
