@@ -79,12 +79,14 @@ describe('UserService (integration)', () => {
     })
 
     it('clears refresh token on valid user', async () => {
+      await Bun.sleep(100)
       const [dbUser] = await db
         .select({ id: users.id })
         .from(users)
         .where(eq(users.email, 'svc_login@test.com'))
         .limit(1)
-      await expect(UserService.logout(dbUser.id)).resolves.toBeUndefined()
+      const result = await UserService.logout(dbUser.id)
+      expect(result).toBeUndefined()
     })
   })
 

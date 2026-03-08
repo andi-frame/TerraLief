@@ -12,6 +12,7 @@ export const queryClient = postgres(connectionString, {
   max: 10,
   idle_timeout: 20,
   connect_timeout: 10,
+  prepare: false,      // use simple query protocol — fixes UUID prepared statement hang bug
 })
 export const db = drizzle(queryClient, { schema })
 
