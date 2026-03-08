@@ -7,7 +7,7 @@ export const openApiSpec = {
     description: 'Authentication API for the TerraLief application.',
   },
   servers: [
-    { url: 'http://localhost:3000', description: 'Local development' },
+    { url: 'http://localhost:3001', description: 'Local development' },
   ],
   components: {
     securitySchemes: {

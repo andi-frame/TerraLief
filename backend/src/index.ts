@@ -52,7 +52,7 @@ app.notFound((c) => c.json({ success: false, error: 'Route not found' }, 404))
 // Removed as requested
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
-const port = Number(process.env.PORT) || 3000
+const port = Number(process.env.PORT) || 3001
 logger.info(`Server running at http://localhost:${port}`)
 
 export default {
