@@ -3,7 +3,10 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
-    # Volumes removed to prevent host overwriting container's /app and node_modules
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
     environment:
       - NODE_ENV=development
     depends_on:
@@ -24,7 +27,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    # Volumes removed to prevent host overwriting container's /app and node_modules
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 
   db:
     image: postgres:16-alpine
@@ -47,7 +52,8 @@ services:
     build: ./ml-services
     ports:
       - "8001:8000"
-    # Volumes removed to prevent host overwriting container's /app and .venv
+    volumes:
+      - ./ml-services:/app
     environment:
       - PYTHONUNBUFFERED=1
 
