@@ -1,7 +1,29 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+@font-face {
+  font-family: 'NeueMontreal';
+  src: url('/fonts/NeueMontreal-Regular.woff2') format('woff2');
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NeueMontreal';
+  src: url('/fonts/NeueMontreal-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NeueMontreal';
+  src: url('/fonts/NeueMontreal-Medium.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-main: 'NeueMontreal', sans-serif;
 
   --color-warning-100: #fff4c6;
   --color-warning-200: #ffc120;
@@ -66,8 +88,30 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: var(--color-neutral-50);
+  color: var(--color-neutral-950);
+
+  font-family: var(--font-main);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+button, 
+input, 
+select, 
+textarea {
+  font-family: inherit;
 }
 
 #root {
   min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 550; 
+}
+
+em {
+  font-weight: 500;
+  font-style: italic;
 }
