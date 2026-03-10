@@ -13,7 +13,7 @@ function SheltersPage() {
 
   return (
     <main className="shelters-map-page">
-      {/* 1. Static Map Placeholder (Replaces Leaflet) */}
+      {/* 1. Static Map Placeholder */}
       <div className="shelters-map-placeholder">
         <div className="placeholder-text">Interactive Map Placeholder</div>
         

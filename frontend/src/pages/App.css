@@ -323,7 +323,7 @@ footer {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: var(--color-neutral-50);
+  background: #2f3e4d;
 }
 
 /* Static Map Placeholder Canvas */
