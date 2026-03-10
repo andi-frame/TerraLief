@@ -1,0 +1,52 @@
+services:
+  web:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      api:
+        condition: service_started
+
+  api:
+    build: ./backend
+    command: bun run --hot src/index.ts
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DATABASE_URL=postgresql://terralief:terralief@db:5432/terralief
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-super-secret-access-key-terralief}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-super-secret-refresh-key-terralief}
+      - NODE_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: terralief
+      POSTGRES_PASSWORD: terralief
+      POSTGRES_DB: terralief
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U terralief"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ml:
+    build: ./ml-services
+    ports:
+      - "8001:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  postgres_data:
