@@ -21,6 +21,13 @@ const SHELTERS = [
   { id: 3, name: 'Downtown Community Hub', location: 'Central Square', count: 45, urgency: 'low' },
 ];
 
+//Mock api calls untuk maps
+const MAP_REPORTS = [
+  { id: 1, lat: 20, lng: 67, type: 'flood', urgency: 'high' },
+  { id: 2, lat: 38, lng: 56, type: 'flood', urgency: 'low' },
+  { id: 3, lat: 35, lng: 49, type: 'landslide', urgency: 'medium' },
+];
+
 function App() {
   const [isAccessMenuOpen, setIsAccessMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Flood'); //state for tabs
@@ -77,6 +84,25 @@ function App() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Map Placeholder */}
+          <div className="map-placeholder">
+            <div className="placeholder-text">Interactive Map UI</div>
+            
+            {MAP_REPORTS.map((report) => (
+              <div 
+                key={report.id} 
+                className={`custom-marker ${report.urgency}`}
+                style={{ top: `${report.lat}%`, left: `${report.lng}%` }} 
+              >
+                {/* image marker based on type and urgency */}
+                <img 
+                  src={`/${report.type}marker.png`} 
+                  alt={`${report.type} at ${report.urgency} urgency`} 
+                />
+              </div>
+            ))}
           </div>
 
           <div className="legend-card">

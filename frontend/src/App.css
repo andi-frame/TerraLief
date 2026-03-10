@@ -167,62 +167,57 @@
 .map-placeholder {
   position: relative;
   border-radius: 1.45rem;
+  width: 100%;
   height: clamp(210px, 36vw, 310px);
   background:
     radial-gradient(circle at 13% 72%, rgba(255, 255, 255, 0.07), transparent 20%),
     radial-gradient(circle at 70% 15%, rgba(255, 255, 255, 0.06), transparent 22%),
     linear-gradient(120deg, #2f3f4f 0%, #2b3948 45%, #23303d 100%);
   border: 1px solid #21303d;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 1rem;
+  overflow: hidden; /* Crucial: Hides map elements when panning/zooming out of bounds */
 }
 
-.map-placeholder > div {
-  color: rgba(255, 255, 255, 0.78);
-  max-width: 80%;
-  font-size: 1.35rem;
-}
-
-.pin {
-  width: 1rem;
-  height: 1rem;
-  border-radius: 9999px;
+/* Center the placeholder text without disrupting absolute markers */
+.placeholder-text {
   position: absolute;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.35rem;
+  z-index: 1;
 }
 
-.pin.red {
-  background: var(--color-danger-200);
-  top: 20%;
-  left: 67%;
+/* --- CUSTOM MARKERS --- */
+.custom-marker {
+  width: 28px; 
+  height: 28px;
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
-.pin.green {
-  background: var(--color-success-200);
+.custom-marker img {
+  width: 35px; 
+  height: 35px;
+  object-fit: contain;
 }
 
-.pin.green.first {
-  top: 38%;
-  left: 56%;
+.custom-marker.high {
+  background-color: var(--color-danger-200, #E02424);
 }
 
-.pin.green.second {
-  bottom: 21%;
-  left: 26%;
+.custom-marker.medium {
+  background-color: var(--color-warning-200, #FACA15);
 }
 
-.pin.green.third {
-  top: 31%;
-  left: 79%;
-}
-
-.pin.blue {
-  background: var(--color-blue-400);
-  bottom: 35%;
-  left: 49%;
+.custom-marker.low {
+  background-color: var(--color-success-200, #31C48D);
 }
 
 .legend-card {
