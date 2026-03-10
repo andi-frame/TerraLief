@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import './Navbar.css'
 
 function Navbar() {
@@ -8,9 +9,14 @@ function Navbar() {
     <nav className="site-navbar" aria-label="Main navigation">
       <div className={`site-navbar__inner ${isMenuOpen ? 'is-open' : ''}`}>
         <div className="site-navbar__bar">
-          <button className="site-navbar__logo" type="button" aria-label="TerraLief home">
+          <NavLink
+            to="/"
+            className="site-navbar__logo"
+            onClick={() => setIsMenuOpen(false)}
+            aria-label="TerraLief home"
+          >
             ✶
-          </button>
+          </NavLink>
           <button
             className="site-navbar__toggle"
             type="button"
@@ -24,9 +30,15 @@ function Navbar() {
 
         {isMenuOpen && (
           <div className="site-navbar__panel">
-            <a href="#">Home</a>
-            <a href="#">Shelters</a>
-            <a href="#">Routes</a>
+            <NavLink to="/" onClick={() => setIsMenuOpen(false)}>
+              Home
+            </NavLink>
+            <NavLink to="/shelters" onClick={() => setIsMenuOpen(false)}>
+              Shelters
+            </NavLink>
+            <NavLink to="/routes" onClick={() => setIsMenuOpen(false)}>
+              Routes
+            </NavLink>
             <button type="button">Sign Up</button>
           </div>
         )}

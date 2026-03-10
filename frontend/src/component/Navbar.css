@@ -50,6 +50,7 @@
 .site-navbar__logo {
   font-size: 3rem;
   line-height: 1;
+  text-decoration: none;
 }
 
 .site-navbar__toggle {
@@ -74,6 +75,10 @@
   text-decoration: none;
   font-size: 2.1rem;
   line-height: 1.2;
+}
+
+.site-navbar__panel a.active {
+  opacity: 0.85;
 }
 
 .site-navbar__panel button {
