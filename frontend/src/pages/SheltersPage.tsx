@@ -14,7 +14,7 @@ function SheltersPage() {
   return (
     <main className="shelters-map-page">
       {/* 1. Static Map Placeholder */}
-      <div className="shelters-map-placeholder">
+      <div className="shelters-map-canvas">
         <div className="placeholder-text">Interactive Map Placeholder</div>
         
         {/* Render static dots for the placeholder */}

@@ -1,3 +1,5 @@
+import './UrgencyLegend.css'
+
 interface LegendItem {
   id: string
   color: 'red' | 'yellow' | 'green'

@@ -1,3 +1,5 @@
+import './InfoCard.css'
+
 type UrgencyLevel = 'high' | 'medium' | 'low'
 
 interface InfoCardProps {

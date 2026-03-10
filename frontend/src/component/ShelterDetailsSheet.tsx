@@ -1,3 +1,5 @@
+import './ShelterDetailsSheet.css'
+
 interface SheetRow {
   label: string
   value: string | number

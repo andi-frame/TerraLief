@@ -1,3 +1,5 @@
+import './MapPlaceholder.css'
+
 interface MapReport {
   id: number
   lat: number
