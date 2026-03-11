@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import ReliefMap, { type ReliefMarker } from '../component/ReliefMap'
+import { ACEH_CENTER, MAP_REPORTS, ROUTE_PATH_POINTS, ROUTE_STOPS, SHELTER_MAP_ITEMS } from './mockData'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import './RoutesPage.css'
 
@@ -8,19 +11,66 @@ type SupplyRow = {
 }
 
 function RouteMapBackdrop({ withPath = false, withActivePin = false }: { withPath?: boolean; withActivePin?: boolean }) {
+  const markers = useMemo<ReliefMarker[]>(() => {
+    const disasterMarkers = MAP_REPORTS.slice(0, 4).map((report) => ({
+      id: `report-${report.id}`,
+      position: [report.lat, report.lng] as [number, number],
+      kind: report.type,
+      title: `${report.type[0].toUpperCase() + report.type.slice(1)} report`,
+      subtitle: report.area,
+      popup: `${report.urgency[0].toUpperCase() + report.urgency.slice(1)} urgency`,
+      urgency: report.urgency,
+    }))
+
+    const shelterMarkers = SHELTER_MAP_ITEMS.slice(0, 3).map((shelter) => ({
+      id: `shelter-${shelter.id}`,
+      position: shelter.latLng,
+      kind: 'shelter' as const,
+      title: shelter.name,
+      subtitle: shelter.location,
+      popup: `${shelter.count} people waiting`,
+      urgency: shelter.urgency,
+      count: shelter.count,
+    }))
+
+    const routeMarkers = withPath
+      ? ROUTE_STOPS.map((stop, index) => ({
+          id: stop.id,
+          position: stop.position,
+          kind: 'route-stop' as const,
+          title: stop.name,
+          subtitle: stop.location,
+          popup: stop.description,
+          sequence: index + 1,
+        }))
+      : []
+
+    const currentLocationMarker = withActivePin
+      ? [
+          {
+            id: 'current-location',
+            position: ROUTE_PATH_POINTS[0],
+            kind: 'current-location' as const,
+            title: 'Your current location',
+            popup: 'Live volunteer location',
+          },
+        ]
+      : []
+
+    return [...disasterMarkers, ...shelterMarkers, ...routeMarkers, ...currentLocationMarker]
+  }, [withActivePin, withPath])
+
   return (
-    <div className="routes-map-backdrop" aria-hidden="true">
-      <div className="routes-map-grid" />
-      {withPath && (
-        <svg className="routes-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polyline points="12,42 20,46 26,54 44,47 61,39 71,45 79,55 69,58 61,49 53,54" />
-        </svg>
-      )}
-      {withPath && <span className="routes-pin one" />}
-      {withPath && <span className="routes-pin two" />}
-      {withPath && <span className="routes-pin three" />}
-      {withActivePin && <span className="routes-current-dot" />}
-    </div>
+    <ReliefMap
+      center={ACEH_CENTER}
+      zoom={8}
+      clustered={!withPath}
+      className="routes-map-layer"
+      markers={markers}
+      polyline={withPath ? ROUTE_PATH_POINTS : undefined}
+      focusPosition={withPath ? ROUTE_PATH_POINTS[0] : null}
+      focusZoom={withPath ? 10 : 8}
+    />
   )
 }
 
@@ -126,7 +176,7 @@ function BestRouteCard() {
           </div>
         </div>
 
-        <p className="routes-path-text">Hilltop Shelter - Riverside Shelter - Community Hall Shelter</p>
+        <p className="routes-path-text">Takengon Command Shelter - Bintang Relief Post - Laut Tawar Hall</p>
 
         <div className="routes-metrics-grid">
           <div><strong>3</strong><span>Shelters to Assist</span></div>
@@ -149,10 +199,10 @@ function StartRouteCard() {
         </div>
 
         <p className="routes-path-text">Route 1</p>
-        <p className="routes-path-text muted">Hilltop Shelter - Riverside Shelter - Community Hall Shelter</p>
+        <p className="routes-path-text muted">Takengon Command Shelter - Bintang Relief Post - Laut Tawar Hall</p>
 
         <h3>Next Stop</h3>
-        <p className="routes-next-stop">• Hilltop Shelter</p>
+        <p className="routes-next-stop">• Takengon Command Shelter</p>
 
         <div className="routes-needs-list">
           <p><span>Food Packs</span><span>20 packs</span></p>

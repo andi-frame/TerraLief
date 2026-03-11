@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
+import ReliefMap from '../component/ReliefMap'
 import ShelterDetailsSheet from '../component/ShelterDetailsSheet'
-import { SHELTER_MAP_ITEMS } from './mockData'
+import { ACEH_CENTER, SHELTER_MAP_ITEMS } from './mockData'
 import './App.css'
 
 function SheltersPage() {
@@ -11,32 +12,36 @@ function SheltersPage() {
     [selectedShelterId],
   )
 
+  const shelterMarkers = useMemo(
+    () =>
+      SHELTER_MAP_ITEMS.map((shelter) => ({
+        id: shelter.id,
+        position: shelter.latLng,
+        kind: 'shelter' as const,
+        title: shelter.name,
+        subtitle: shelter.location,
+        popup: `${shelter.count} people · ${shelter.urgency} urgency`,
+        urgency: shelter.urgency,
+        count: shelter.count,
+        isActive: shelter.id === selectedShelterId,
+        onClick: () => setSelectedShelterId(shelter.id),
+      })),
+    [selectedShelterId],
+  )
+
   return (
     <main className="shelters-map-page">
-      {/* 1. Static Map Placeholder */}
       <div className="shelters-map-canvas">
-        <div className="placeholder-text">Interactive Map Placeholder</div>
-        
-        {/* Render static dots for the placeholder */}
-        {SHELTER_MAP_ITEMS.map((shelter, index) => {
-          // Fake percentages so the dots spread out nicely on the placeholder background
-          const fakeTop = 25 + (index * 12) % 40; 
-          const fakeLeft = 30 + (index * 20) % 50;
-
-          return (
-            <button
-              key={shelter.id}
-              type="button"
-              className={`shelter-marker ${shelter.urgency}`}
-              style={{ top: `${fakeTop}%`, left: `${fakeLeft}%` }}
-              onClick={() => setSelectedShelterId(shelter.id)}
-              aria-label={`View details for ${shelter.name}`}
-            />
-          )
-        })}
+        <ReliefMap
+          center={ACEH_CENTER}
+          zoom={8}
+          className="shelters-map-layer"
+          markers={shelterMarkers}
+          focusPosition={selectedShelter?.latLng ?? null}
+          focusZoom={selectedShelter ? 10 : 8}
+        />
       </div>
 
-      {/* 2. The Floating UI Overlay (Hovering above the map) */}
       <div className="shelters-ui-overlay">
         <div className="shelter-pill">Nearby Shelters</div>
 
@@ -61,7 +66,6 @@ function SheltersPage() {
         </section>
       </div>
 
-      {/* 3. The Modal Sheet */}
       <ShelterDetailsSheet shelter={selectedShelter} onClose={() => setSelectedShelterId(null)} />
     </main>
   )

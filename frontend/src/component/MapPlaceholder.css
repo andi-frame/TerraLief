@@ -1,53 +1,20 @@
-.map-placeholder {
+.map-placeholder-shell {
   position: relative;
-  border-radius: 1.45rem;
   width: 100%;
   height: clamp(210px, 36vw, 310px);
-  background:
-    radial-gradient(circle at 13% 72%, rgba(255, 255, 255, 0.07), transparent 20%),
-    radial-gradient(circle at 70% 15%, rgba(255, 255, 255, 0.06), transparent 22%),
-    linear-gradient(120deg, #2f3f4f 0%, #2b3948 45%, #23303d 100%);
-  border: 1px solid #21303d;
-  overflow: hidden;
+  border-radius: 1.45rem;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+  z-index: 0;
+  isolation: isolate;
 }
 
-.placeholder-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 1.35rem;
-  z-index: 1;
+.map-placeholder-shell .leaflet-container {
+  border-radius: inherit;
 }
 
-.custom-marker {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.9);
-  transform: translate(-50%, -50%);
-  z-index: 2;
-}
-
-.custom-marker img {
-  width: 35px;
-  height: 35px;
-  object-fit: contain;
-}
-
-.custom-marker.high {
-  background-color: var(--color-danger-200, #e02424);
-}
-
-.custom-marker.medium {
-  background-color: var(--color-warning-200, #faca15);
-}
-
-.custom-marker.low {
-  background-color: var(--color-success-200, #31c48d);
+@media (max-width: 640px) {
+  .map-placeholder-shell {
+    height: 240px;
+  }
 }

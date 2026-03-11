@@ -1,3 +1,5 @@
+export const ACEH_CENTER = [4.695135, 96.749397] as [number, number]
+
 export const LEGEND_ITEMS = [
   {
     id: 'high',
@@ -61,19 +63,22 @@ export const SHELTERS = [
 ]
 
 export const MAP_REPORTS = [
-  { id: 1, lat: 20, lng: 67, type: 'flood', urgency: 'high' as const },
-  { id: 2, lat: 38, lng: 56, type: 'flood', urgency: 'low' as const },
-  { id: 3, lat: 35, lng: 49, type: 'landslide', urgency: 'medium' as const },
+  { id: 1, lat: 5.5483, lng: 95.3238, area: 'Banda Aceh', type: 'flood' as const, urgency: 'high' as const },
+  { id: 2, lat: 5.1801, lng: 97.1507, area: 'Lhokseumawe', type: 'flood' as const, urgency: 'low' as const },
+  { id: 3, lat: 4.6196, lng: 96.8435, area: 'Takengon', type: 'landslide' as const, urgency: 'medium' as const },
+  { id: 4, lat: 4.144, lng: 96.1285, area: 'Meulaboh', type: 'flood' as const, urgency: 'medium' as const },
+  { id: 5, lat: 3.4786, lng: 97.8121, area: 'Kutacane', type: 'landslide' as const, urgency: 'high' as const },
+  { id: 6, lat: 5.383, lng: 95.9609, area: 'Sigli', type: 'flood' as const, urgency: 'medium' as const },
 ]
 
 export const SHELTER_MAP_ITEMS = [
   {
     id: 1,
-    name: 'Hilltop Evacuation Center',
-    location: 'Hill District',
+    name: 'Banda Aceh Command Shelter',
+    location: 'Ulee Kareng, Banda Aceh',
     count: 110,
     urgency: 'high' as const,
-    latLng: [38.8939, -77.0708] as [number, number],
+    latLng: [5.5512, 95.3168] as [number, number],
     details: {
       occupancy: [
         { label: 'Male', value: 52 },
@@ -101,11 +106,11 @@ export const SHELTER_MAP_ITEMS = [
   },
   {
     id: 2,
-    name: 'North Community Shelter',
-    location: 'Riverside Area',
+    name: 'Lhokseumawe Riverside Shelter',
+    location: 'Banda Sakti, Lhokseumawe',
     count: 72,
     urgency: 'medium' as const,
-    latLng: [38.9018, -77.1056] as [number, number],
+    latLng: [5.1817, 97.1478] as [number, number],
     details: {
       occupancy: [
         { label: 'Male', value: 35 },
@@ -134,10 +139,10 @@ export const SHELTER_MAP_ITEMS = [
   {
     id: 3,
     name: 'Green Bridge Shelter',
-    location: 'Green Bridge District',
+    location: 'Takengon, Central Aceh',
     count: 45,
     urgency: 'low' as const,
-    latLng: [38.8872, -77.1324] as [number, number],
+    latLng: [4.6217, 96.8512] as [number, number],
     details: {
       occupancy: [
         { label: 'Male', value: 20 },
@@ -165,11 +170,11 @@ export const SHELTER_MAP_ITEMS = [
   },
   {
     id: 4,
-    name: 'Hilltop Evacuation Center',
-    location: 'Hill District',
+    name: 'Meulaboh Coastal Shelter',
+    location: 'Johan Pahlawan, Meulaboh',
     count: 110,
     urgency: 'high' as const,
-    latLng: [38.8834, -77.0822] as [number, number],
+    latLng: [4.1367, 96.1254] as [number, number],
     details: {
       occupancy: [
         { label: 'Male', value: 52 },
@@ -197,11 +202,11 @@ export const SHELTER_MAP_ITEMS = [
   },
   {
     id: 5,
-    name: 'Hilltop Evacuation Center',
-    location: 'Hill District',
+    name: 'Kutacane Highland Shelter',
+    location: 'Kutacane, Southeast Aceh',
     count: 110,
     urgency: 'high' as const,
-    latLng: [38.8983, -77.1279] as [number, number],
+    latLng: [3.4768, 97.8142] as [number, number],
     details: {
       occupancy: [
         { label: 'Male', value: 52 },
@@ -228,3 +233,37 @@ export const SHELTER_MAP_ITEMS = [
     },
   },
 ]
+
+export const ROUTE_STOPS = [
+  {
+    id: 'route-stop-1',
+    name: 'Takengon Command Shelter',
+    location: 'Takengon',
+    description: 'Priority food and clean water delivery point.',
+    position: [4.6737, 96.7824] as [number, number],
+  },
+  {
+    id: 'route-stop-2',
+    name: 'Bintang Relief Post',
+    location: 'Bintang',
+    description: 'Medical kits and blankets needed soon.',
+    position: [4.6515, 96.8062] as [number, number],
+  },
+  {
+    id: 'route-stop-3',
+    name: 'Laut Tawar Hall',
+    location: 'Laut Tawar',
+    description: 'Final shelter stop with mixed aid supplies.',
+    position: [4.6296, 96.7741] as [number, number],
+  },
+]
+
+export const ROUTE_PATH_POINTS = [
+  ACEH_CENTER,
+  [4.6848, 96.7659],
+  [4.6737, 96.7824],
+  [4.6623, 96.7922],
+  [4.6515, 96.8062],
+  [4.6403, 96.7928],
+  [4.6296, 96.7741],
+] as [number, number][]

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import MapPlaceholder from '../component/MapPlaceholder'
 import UrgencyLegend from '../component/UrgencyLegend'
 import InfoCard from '../component/InfoCard'
-import { CRITICAL_NEEDS, LEGEND_ITEMS, MAP_REPORTS, SHELTERS } from './mockData'
+import { ACEH_CENTER, CRITICAL_NEEDS, LEGEND_ITEMS, MAP_REPORTS, SHELTERS } from './mockData'
 import './App.css'
 
 function HomePage() {
@@ -67,7 +67,7 @@ function HomePage() {
             </div>
           </div>
 
-          <MapPlaceholder reports={filteredReports} />
+          <MapPlaceholder reports={filteredReports} center={ACEH_CENTER} />
           <UrgencyLegend items={LEGEND_ITEMS} />
         </section>
 

@@ -1,0 +1,158 @@
+.relief-map-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  isolation: isolate;
+}
+
+.relief-map {
+  width: 100%;
+  height: 100%;
+}
+
+.relief-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+.relief-map .leaflet-control-zoom {
+  border: 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.relief-map .leaflet-control-zoom a {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  color: #1b1b1b;
+}
+
+.relief-popup {
+  min-width: 160px;
+}
+
+.relief-popup strong {
+  display: block;
+  font-size: 1rem;
+  color: #101828;
+}
+
+.relief-popup span {
+  display: block;
+  margin-top: 0.15rem;
+  color: #475467;
+  font-size: 0.88rem;
+}
+
+.relief-popup p {
+  margin: 0.35rem 0 0;
+  color: #344054;
+  font-size: 0.84rem;
+}
+
+.relief-div-icon {
+  background: transparent;
+  border: 0;
+}
+
+.relief-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22), 0 0 0 4px rgba(255, 255, 255, 0.94);
+}
+
+.relief-marker--disaster {
+  width: 46px;
+  height: 46px;
+}
+
+.relief-marker--disaster.high {
+  background: var(--color-danger-200);
+}
+
+.relief-marker--disaster.medium {
+  background: var(--color-warning-200);
+}
+
+.relief-marker--disaster.low {
+  background: var(--color-success-200);
+}
+
+.relief-marker--disaster img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+}
+
+.relief-marker span {
+  font-size: 0.8rem;
+}
+
+.relief-marker--shelter.high {
+  background: #e02424;
+}
+
+.relief-marker--shelter.medium {
+  background: #d9a514;
+}
+
+.relief-marker--shelter.low {
+  background: #1f9d67;
+}
+
+.relief-marker--shelter.is-active {
+  transform: scale(1.12);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24), 0 0 0 5px rgba(255, 255, 255, 0.96);
+}
+
+.relief-marker--route-stop {
+  width: 36px;
+  height: 36px;
+  background: #0d43d1;
+}
+
+.relief-marker--current-location {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #5597ff;
+  border: 4px solid rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 7px rgba(85, 151, 255, 0.22);
+}
+
+.custom-marker-cluster {
+  background: transparent;
+  border: 0;
+}
+
+.cluster-icon {
+  background: #1f2937;
+  height: 2.35rem;
+  width: 2.35rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 640px) {
+  .relief-map .leaflet-control-zoom {
+    margin-right: 10px;
+    margin-bottom: 18px;
+  }
+}

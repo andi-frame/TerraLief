@@ -6,76 +6,10 @@
   background: #e7e7e7;
 }
 
-.routes-map-backdrop {
+.routes-map-layer {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 20% 72%, rgba(194, 215, 178, 0.56), transparent 15%),
-    radial-gradient(circle at 84% 78%, rgba(189, 223, 178, 0.56), transparent 18%),
-    linear-gradient(#d6d6d6 1px, transparent 1px),
-    linear-gradient(90deg, #d6d6d6 1px, transparent 1px),
-    #ececec;
-  background-size: auto, auto, 48px 48px, 48px 48px, auto;
-}
-
-.routes-map-grid {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    30deg,
-    transparent,
-    transparent 36px,
-    rgba(255, 255, 255, 0.45) 36px,
-    rgba(255, 255, 255, 0.45) 38px
-  );
-}
-
-.routes-path {
-  position: absolute;
-  inset: 0;
-}
-
-.routes-path polyline {
-  fill: none;
-  stroke: #0d43d1;
-  stroke-width: 0.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.routes-pin {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  background: #0d43d1;
-}
-
-.routes-pin.one {
-  top: 41%;
-  left: 13%;
-}
-
-.routes-pin.two {
-  top: 36%;
-  left: 72%;
-}
-
-.routes-pin.three {
-  top: 48%;
-  left: 82%;
-}
-
-.routes-current-dot {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.95);
-  background: #5597ff;
-  top: 51%;
-  left: 52%;
+  z-index: 1;
 }
 
 .routes-overlay-card {
@@ -86,6 +20,7 @@
   width: min(92vw, 400px);
   background: rgba(242, 242, 242, 0.96);
   border: 1px solid var(--color-neutral-200);
+  backdrop-filter: blur(10px);
   border-radius: 2rem;
   padding: 1rem;
 }
@@ -254,6 +189,7 @@
   bottom: 0;
   z-index: 12;
   padding: 0 0.85rem 0.85rem;
+  pointer-events: none;
 }
 
 .routes-chip {
@@ -272,6 +208,7 @@
   border: 1px solid var(--color-neutral-200);
   background: rgba(246, 246, 246, 0.98);
   padding: 0.85rem;
+  pointer-events: auto;
 }
 
 .routes-route-head {

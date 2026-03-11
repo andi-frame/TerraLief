@@ -1,32 +1,37 @@
+import ReliefMap from './ReliefMap'
 import './MapPlaceholder.css'
 
 interface MapReport {
   id: number
   lat: number
   lng: number
-  type: string
+  type: 'flood' | 'landslide'
   urgency: 'high' | 'medium' | 'low'
+  area: string
 }
 
 interface MapPlaceholderProps {
   reports: MapReport[]
+  center: [number, number]
 }
 
-function MapPlaceholder({ reports }: MapPlaceholderProps) {
+function MapPlaceholder({ reports, center }: MapPlaceholderProps) {
   return (
-    <div className="map-placeholder">
-      <div className="placeholder-text">Interactive Map UI</div>
-
-      {reports.map((report) => (
-        <div
-          key={report.id}
-          className={`custom-marker ${report.urgency}`}
-          style={{ top: `${report.lat}%`, left: `${report.lng}%` }}
-        >
-          <img src={`/${report.type}marker.png`} alt={`${report.type} marker`} />
-        </div>
-      ))}
-    </div>
+    <ReliefMap
+      center={center}
+      zoom={8}
+      clustered
+      className="map-placeholder-shell"
+      markers={reports.map((report) => ({
+        id: report.id,
+        position: [report.lat, report.lng],
+        kind: report.type,
+        title: `${report.type[0].toUpperCase() + report.type.slice(1)} report`,
+        subtitle: report.area,
+        popup: `${report.urgency[0].toUpperCase() + report.urgency.slice(1)} urgency`,
+        urgency: report.urgency,
+      }))}
+    />
   )
 }
 
