@@ -107,6 +107,8 @@
   border-radius: 1rem;
   padding: 1rem;
   text-align: center;
+  display: block;
+  cursor: pointer;
 }
 
 .routes-upload-box p {
@@ -115,12 +117,23 @@
   color: var(--color-neutral-700);
 }
 
-.routes-upload-box button {
+.routes-upload-box span {
+  display: inline-block;
   border: 1px solid var(--color-neutral-300);
   background: #fff;
   border-radius: 9999px;
   font-size: 1.35rem;
   padding: 0.42rem 1rem;
+}
+
+.routes-upload-box input {
+  display: none;
+}
+
+.routes-file-name {
+  margin: 0.45rem 0 0;
+  color: var(--color-blue-700);
+  font-size: 1.15rem;
 }
 
 .routes-input-head {
@@ -140,14 +153,53 @@
 }
 
 .routes-input-row input,
-.routes-find-card select {
+.routes-find-card select,
+.routes-custom-input {
   width: 100%;
   border: 1px solid var(--color-neutral-300);
   border-radius: 0.9rem;
   padding: 0.55rem 0.65rem;
-  background: #efefef;
-  color: var(--color-neutral-500);
+  background: #fff;
+  color: #111827;
   font-size: 1.35rem;
+}
+
+.routes-input-row input::placeholder,
+.routes-custom-input::placeholder {
+  color: var(--color-neutral-500);
+}
+
+.routes-supply-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.routes-supply-row {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+}
+
+.routes-supply-row .routes-input-row {
+  flex: 1;
+  margin-top: 0;
+}
+
+.routes-remove-btn {
+  min-width: 74px;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 0.9rem;
+  background: #fff;
+  color: var(--color-neutral-700);
+  font-size: 0.95rem;
+  padding: 0.7rem 0.45rem;
+  cursor: pointer;
+}
+
+.routes-remove-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .routes-add-btn {
@@ -156,7 +208,8 @@
   border: 1px solid var(--color-neutral-300);
   border-radius: 0.9rem;
   background: #e8e8e8;
-  font-size: 2rem;
+  font-size: 1.2rem;
+  padding: 0.75rem 1rem;
 }
 
 .routes-find-card label {
@@ -167,6 +220,10 @@
 
 .routes-find-card label input {
   margin-right: 0.45rem;
+}
+
+.routes-custom-input {
+  margin-top: 0.55rem;
 }
 
 .routes-actions {
@@ -209,6 +266,29 @@
   background: rgba(246, 246, 246, 0.98);
   padding: 0.85rem;
   pointer-events: auto;
+}
+
+.routes-route-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.65rem;
+}
+
+.routes-route-option {
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--color-neutral-700);
+  font-size: 1rem;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.routes-route-option.active {
+  border-color: var(--color-blue-700);
+  background: var(--color-blue-700);
+  color: #fff;
 }
 
 .routes-route-head {
@@ -310,6 +390,18 @@
   font-size: 1.5rem;
 }
 
+.routes-preview-list {
+  margin-top: 0.8rem;
+}
+
+.routes-preview-list p {
+  margin: 0.2rem 0;
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-neutral-700);
+  font-size: 1.15rem;
+}
+
 @media (max-width: 640px) {
   .routes-overlay-card {
     width: calc(100vw - 1rem);
@@ -337,15 +429,23 @@
   .routes-path-text,
   .routes-input-row input,
   .routes-find-card select,
+  .routes-custom-input,
   .routes-input-head,
   .routes-upload-box p,
-  .routes-upload-box button,
+  .routes-upload-box span,
   .routes-metrics-grid strong,
   .routes-needs-list p,
   .routes-next-stop,
   .routes-metrics-grid span,
-  .routes-pill-btn {
+  .routes-pill-btn,
+  .routes-preview-list p,
+  .routes-file-name,
+  .routes-remove-btn {
     font-size: 0.95rem;
+  }
+
+  .routes-route-option {
+    font-size: 0.85rem;
   }
 
   .routes-find-card {

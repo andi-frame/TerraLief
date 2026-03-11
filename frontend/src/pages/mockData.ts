@@ -267,3 +267,113 @@ export const ROUTE_PATH_POINTS = [
   [4.6403, 96.7928],
   [4.6296, 96.7741],
 ] as [number, number][]
+
+export type RouteOption = {
+  id: string
+  name: string
+  distanceKm: number
+  etaMin: number
+  sheltersToAssist: number
+  peopleSupported: number
+  path: [number, number][]
+  stops: {
+    id: string
+    name: string
+    location: string
+    description: string
+    position: [number, number]
+  }[]
+}
+
+export const ROUTE_OPTIONS: RouteOption[] = [
+  {
+    id: 'route-1',
+    name: 'Route 1',
+    distanceKm: 12.4,
+    etaMin: 28,
+    sheltersToAssist: 3,
+    peopleSupported: 180,
+    path: ROUTE_PATH_POINTS,
+    stops: ROUTE_STOPS,
+  },
+  {
+    id: 'route-2',
+    name: 'Route 2',
+    distanceKm: 13.1,
+    etaMin: 31,
+    sheltersToAssist: 3,
+    peopleSupported: 165,
+    path: [
+      ACEH_CENTER,
+      [4.6902, 96.7603],
+      [4.6789, 96.7738],
+      [4.6693, 96.7884],
+      [4.6541, 96.8045],
+      [4.6419, 96.798],
+      [4.6335, 96.7812],
+    ],
+    stops: [
+      {
+        id: 'route-2-stop-1',
+        name: 'Kebayakan Shelter',
+        location: 'Kebayakan',
+        description: 'Food packs and baby supplies needed.',
+        position: [4.6789, 96.7738],
+      },
+      {
+        id: 'route-2-stop-2',
+        name: 'Bebesen Hall',
+        location: 'Bebesen',
+        description: 'Road partially flooded, proceed slowly.',
+        position: [4.6541, 96.8045],
+      },
+      {
+        id: 'route-2-stop-3',
+        name: 'Lukup Relief Spot',
+        location: 'Lukup',
+        description: 'Medical kits are the top priority.',
+        position: [4.6335, 96.7812],
+      },
+    ],
+  },
+  {
+    id: 'route-3',
+    name: 'Route 3',
+    distanceKm: 11.8,
+    etaMin: 26,
+    sheltersToAssist: 3,
+    peopleSupported: 172,
+    path: [
+      ACEH_CENTER,
+      [4.6866, 96.7586],
+      [4.6768, 96.7685],
+      [4.6669, 96.7814],
+      [4.6557, 96.7923],
+      [4.6452, 96.7864],
+      [4.6353, 96.7721],
+    ],
+    stops: [
+      {
+        id: 'route-3-stop-1',
+        name: 'Pegasing Shelter',
+        location: 'Pegasing',
+        description: 'Water and blankets requested.',
+        position: [4.6768, 96.7685],
+      },
+      {
+        id: 'route-3-stop-2',
+        name: 'Ketol Relief Post',
+        location: 'Ketol',
+        description: 'Bridge access is narrow for large vehicles.',
+        position: [4.6557, 96.7923],
+      },
+      {
+        id: 'route-3-stop-3',
+        name: 'Jagong Aid Point',
+        location: 'Jagong',
+        description: 'Final stop before returning to base.',
+        position: [4.6353, 96.7721],
+      },
+    ],
+  },
+]

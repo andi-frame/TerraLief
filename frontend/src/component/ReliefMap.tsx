@@ -1,6 +1,14 @@
 import { useEffect } from 'react'
-import { divIcon, point, type DivIcon } from 'leaflet'
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
+import { divIcon, point, type DivIcon, type LeafletMouseEvent } from 'leaflet'
+import {
+  MapContainer,
+  Marker,
+  Polyline,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import './ReliefMap.css'
 
@@ -10,6 +18,8 @@ export type ReliefMarkerKind =
   | 'shelter'
   | 'route-stop'
   | 'current-location'
+  | 'draft-point'
+  | 'hazard-point'
 
 export interface ReliefMarker {
   id: number | string
@@ -34,6 +44,7 @@ interface ReliefMapProps {
   focusZoom?: number
   clustered?: boolean
   className?: string
+  onMapClick?: (position: [number, number]) => void
 }
 
 function createDisasterIcon(marker: ReliefMarker): DivIcon {
@@ -81,6 +92,26 @@ function createCurrentLocationIcon(): DivIcon {
   })
 }
 
+function createDraftPointIcon(marker: ReliefMarker): DivIcon {
+  return divIcon({
+    html: `<div class="relief-marker relief-marker--draft-point"><span>${marker.sequence ?? ''}</span></div>`,
+    className: 'relief-div-icon',
+    iconSize: point(30, 30, true),
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -12],
+  })
+}
+
+function createHazardPointIcon(marker: ReliefMarker): DivIcon {
+  return divIcon({
+    html: `<div class="relief-marker relief-marker--hazard-point"><span>${marker.sequence ?? ''}</span></div>`,
+    className: 'relief-div-icon',
+    iconSize: point(30, 30, true),
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -12],
+  })
+}
+
 function getMarkerIcon(marker: ReliefMarker): DivIcon {
   switch (marker.kind) {
     case 'flood':
@@ -92,6 +123,10 @@ function getMarkerIcon(marker: ReliefMarker): DivIcon {
       return createRouteStopIcon(marker)
     case 'current-location':
       return createCurrentLocationIcon()
+    case 'draft-point':
+      return createDraftPointIcon(marker)
+    case 'hazard-point':
+      return createHazardPointIcon(marker)
     default:
       return createDisasterIcon(marker)
   }
@@ -122,7 +157,31 @@ function MapFocusController({ focusPosition, focusZoom }: { focusPosition?: [num
   return null
 }
 
-function ReliefMap({ center, zoom, markers, polyline, focusPosition, focusZoom, clustered = false, className }: ReliefMapProps) {
+function MapClickController({ onMapClick }: { onMapClick?: (position: [number, number]) => void }) {
+  useMapEvents({
+    click(event: LeafletMouseEvent) {
+      if (!onMapClick) {
+        return
+      }
+
+      onMapClick([event.latlng.lat, event.latlng.lng])
+    },
+  })
+
+  return null
+}
+
+function ReliefMap({
+  center,
+  zoom,
+  markers,
+  polyline,
+  focusPosition,
+  focusZoom,
+  clustered = false,
+  className,
+  onMapClick,
+}: ReliefMapProps) {
   const markerNodes = markers.map((marker) => (
     <Marker
       key={marker.id}
@@ -149,6 +208,7 @@ function ReliefMap({ center, zoom, markers, polyline, focusPosition, focusZoom, 
         />
 
         <MapFocusController focusPosition={focusPosition} focusZoom={focusZoom} />
+        <MapClickController onMapClick={onMapClick} />
 
         {polyline && polyline.length > 1 && (
           <Polyline

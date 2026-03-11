@@ -13,7 +13,9 @@ const queryClient = new QueryClient()
 function AppLayout() {
   const location = useLocation()
   const isMapHeavyPage =
-    location.pathname.startsWith('/routes') || location.pathname.startsWith('/shelters')
+    location.pathname.startsWith('/routes') ||
+    location.pathname.startsWith('/shelters') ||
+    location.pathname.startsWith('/report-road')
 
   return (
     <div className="home-page">
