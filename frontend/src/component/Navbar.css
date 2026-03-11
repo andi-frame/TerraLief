@@ -1,3 +1,22 @@
+.site-navbar__panel .report-link {
+  width: 100%;
+  display: block;
+  text-align: center;
+  border-radius: 16px;
+  padding: 0.8rem 1.5rem;
+  background: var(--color-blue-900);
+  box-shadow: 2px 2px 6px 0 rgba(255, 255, 255, 0.30) inset;
+  color: #fff;
+  font-size: 1.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.site-navbar__panel .report-link:hover {
+  opacity: 0.85;
+}
+
 .site-navbar {
   position: fixed;
   top: 0;
@@ -81,7 +100,7 @@
   opacity: 0.85;
 }
 
-.site-navbar__panel button {
+.site-navbar__panel .signup-btn {
   width: 100%;
   margin-top: auto;
   border: 0;
@@ -92,6 +111,11 @@
   line-height: 1.1;
   padding: 1.05rem 1.5rem;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.site-navbar__panel .signup-btn:hover {
+  opacity: 0.85;
 }
 
 @media (max-width: 768px) {
@@ -109,6 +133,12 @@
     padding: 0.45rem 2rem 1.7rem;
   }
 
+  .site-navbar__panel {
+    min-height: 390px;
+    gap: 1.25rem;
+    padding: 0.45rem 2rem 1.7rem;
+  }
+
   .site-navbar__inner,
   .site-navbar__inner.is-open {
     border-radius: 1.6rem;
@@ -117,6 +147,16 @@
   .site-navbar__panel a,
   .site-navbar__panel button {
     font-size: 1.2rem;
+  }
+
+  .site-navbar__panel .report-link {
+    font-size: 1.2rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .site-navbar__panel .signup-btn {
+    font-size: 1.2rem;
+    padding: 0.6rem 1rem;
   }
 
   .site-navbar__logo {

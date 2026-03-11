@@ -1,9 +1,12 @@
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { isLoggedIn } = useAuth()
+  const navigate = useNavigate()
 
   return (
     <nav className="site-navbar" aria-label="Main navigation">
@@ -30,6 +33,9 @@ function Navbar() {
 
         {isMenuOpen && (
           <div className="site-navbar__panel">
+            <NavLink to="/report-road" className="report-link" onClick={() => setIsMenuOpen(false)}>
+              Report Road Condition
+            </NavLink>
             <NavLink to="/" onClick={() => setIsMenuOpen(false)}>
               Home
             </NavLink>
@@ -39,7 +45,22 @@ function Navbar() {
             <NavLink to="/routes" onClick={() => setIsMenuOpen(false)}>
               Routes
             </NavLink>
-            <button type="button">Sign Up</button>
+            {isLoggedIn ? (
+              <NavLink to="/profile" onClick={() => setIsMenuOpen(false)}>
+                Profile
+              </NavLink>
+            ) : (
+              <button
+                type="button"
+                className="signup-btn"
+                onClick={() => {
+                  navigate('/signup')
+                  setIsMenuOpen(false)
+                }}
+              >
+                Sign Up
+              </button>
+            )}
           </div>
         )}
       </div>
