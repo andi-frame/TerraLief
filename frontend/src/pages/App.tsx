@@ -31,6 +31,7 @@ function AppLayout() {
         <>
           <section className="note-section">
             <div className="note-icon" />
+            <img className="note-logo" src="/terralieflogo.svg" alt="Terralief logo" />
             <p>
               Information is based on community reports and AI analysis. Always follow official
               guidance.

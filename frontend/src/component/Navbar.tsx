@@ -18,7 +18,7 @@ function Navbar() {
             onClick={() => setIsMenuOpen(false)}
             aria-label="TerraLief home"
           >
-            ✶
+            <img className="site-navbar__logo" src='/terralieflogo.svg' alt="TerraLief logo" />
           </NavLink>
           <button
             className="site-navbar__toggle"

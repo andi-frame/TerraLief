@@ -69,7 +69,8 @@
 .site-navbar__logo {
   font-size: 3rem;
   line-height: 1;
-  text-decoration: none;
+  height: 50px;
+  width: auto;
 }
 
 .site-navbar__toggle {
@@ -161,6 +162,8 @@
 
   .site-navbar__logo {
     font-size: 2.4rem;
+    height: 40px;
+    width: auto;
   }
 
   .site-navbar__toggle {
