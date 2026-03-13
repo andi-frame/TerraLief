@@ -32,12 +32,31 @@ type RouteSummary = {
   etaLabel: string
 }
 
+type RouteIncident = {
+  stopIndex: number
+  title: string
+  description: string
+}
+
 type SavedRouteState = {
   formData: RouteFormData
   routeId: string
 }
 
 const SAVED_ROUTE_KEY = 'terralief-saved-route'
+
+const ROUTE_INCIDENTS: RouteIncident[] = [
+  {
+    stopIndex: 0,
+    title: 'Damaged bridge on route',
+    description: 'Narrow road, drive carefully',
+  },
+  {
+    stopIndex: 1,
+    title: 'Standing water reported',
+    description: 'Slow down and use alternate lane if blocked',
+  },
+]
 
 function createSupplyRow(seed: number): SupplyRow {
   return {
@@ -477,6 +496,7 @@ function BestRouteCard() {
 }
 
 function StartRouteCard() {
+  const navigate = useNavigate()
   const location = useLocation()
   const locationState = (location.state ?? {}) as { formData?: RouteFormData; routeId?: string }
   const savedRoute = loadSavedRoute()
@@ -484,45 +504,116 @@ function StartRouteCard() {
   const activeRoute = getActiveRoute(locationState.routeId ?? savedRoute?.routeId)
   const summary = getRouteSummary(formData, activeRoute.id)
   const [completedStops, setCompletedStops] = useState(0)
+  const [skippedStops, setSkippedStops] = useState(0)
   const activeSupplies = formData.supplies.filter((row) => row.item.trim())
-  const nextStop = activeRoute.stops[Math.min(completedStops, activeRoute.stops.length - 1)]
+  const progressedStops = completedStops + skippedStops
+  const stopCount = Math.min(summary.sheltersToAssist, activeRoute.stops.length)
+  const isRouteCompleted = progressedStops >= stopCount
+  const nextStop = activeRoute.stops[Math.min(progressedStops, stopCount - 1)]
+  const activeIncident = ROUTE_INCIDENTS.find((incident) => incident.stopIndex === progressedStops)
+
+  const goToNextStop = (mode: 'completed' | 'skipped') => {
+    if (isRouteCompleted) {
+      return
+    }
+
+    if (mode === 'completed') {
+      setCompletedStops((value) => Math.min(value + 1, stopCount))
+      return
+    }
+
+    setSkippedStops((value) => Math.min(value + 1, stopCount))
+  }
+
+  if (isRouteCompleted) {
+    return (
+      <section className="routes-bottom-sheet">
+        <article className="routes-route-card routes-completed-card">
+          <div className="routes-complete-icon">✓</div>
+          <h2>Route Completed</h2>
+          <p>You have successfully delivered aid to all shelters.</p>
+
+          <div className="routes-complete-route-name">{activeRoute.name}</div>
+          <p className="routes-path-text muted">{activeRoute.stops.map((stop) => stop.name).join(' - ')}</p>
+
+          <div className="routes-metrics-grid">
+            <div><strong>{completedStops}</strong><span>Shelters Assisted</span></div>
+            <div><strong>{summary.peopleSupported}</strong><span>People Supported</span></div>
+            <div><strong>{summary.distanceLabel}</strong><span>Traveled</span></div>
+            <div><strong>{summary.etaLabel}</strong><span>Total Time</span></div>
+          </div>
+
+          <div className="routes-actions routes-end-actions">
+            <button type="button" className="routes-secondary-btn" onClick={() => navigate('/routes')}>
+              Back
+            </button>
+            <button type="button" className="routes-primary-btn" onClick={() => navigate('/routes/best')}>
+              Find Another Route
+            </button>
+          </div>
+        </article>
+      </section>
+    )
+  }
 
   return (
-    <section className="routes-bottom-sheet">
-      <article className="routes-route-card">
-        <div className="routes-start-head">
-          <span>{completedStops} / {summary.sheltersToAssist} shelters completed</span>
-          <button
-            type="button"
-            className="routes-primary-btn"
-            onClick={() => setCompletedStops((value) => Math.min(value + 1, summary.sheltersToAssist))}
-          >
-            Mark as Delivered
-          </button>
-        </div>
+    <>
+      {activeIncident && (
+        <aside className="routes-warning-banner" aria-live="polite">
+          <span>!</span>
+          <div>
+            <strong>{activeIncident.title}</strong>
+            <p>{activeIncident.description}</p>
+          </div>
+        </aside>
+      )}
 
-        <p className="routes-path-text">{activeRoute.name}</p>
-        <p className="routes-path-text muted">{activeRoute.stops.map((stop) => stop.name).join(' - ')}</p>
+      <div className="routes-top-controls">
+        <button type="button" className="routes-secondary-btn" onClick={() => goToNextStop('skipped')}>
+          Skip Shelter
+        </button>
+        <button type="button" className="routes-danger-btn" onClick={() => navigate('/routes')}>
+          End Route
+        </button>
+      </div>
 
-        <h3>Next Stop</h3>
-        <p className="routes-next-stop">• {nextStop.name}</p>
+      <section className="routes-bottom-sheet">
+        <article className="routes-route-card routes-live-card">
+          <div className="routes-start-head">
+            <span>{completedStops} / {stopCount} shelters completed</span>
+            <button
+              type="button"
+              className="routes-primary-btn"
+              onClick={() => goToNextStop('completed')}
+            >
+              Mark as Delivered
+            </button>
+          </div>
 
-        <div className="routes-needs-list">
-          {activeSupplies.length > 0 ? (
-            activeSupplies.slice(0, 3).map((row) => (
-              <p key={row.id}><span>{row.item}</span><span>{row.quantity} {row.unit}</span></p>
-            ))
-          ) : (
-            <p><span>No supplies added yet</span><span>—</span></p>
-          )}
-        </div>
+          <div className="routes-complete-route-name">{activeRoute.name}</div>
+          <p className="routes-path-text muted">{activeRoute.stops.map((stop) => stop.name).join(' - ')}</p>
 
-        <div className="routes-metrics-grid">
-          <div><strong>{summary.distanceLabel}</strong><span>Distance</span></div>
-          <div><strong>{summary.etaLabel}</strong><span>Estimated Time</span></div>
-        </div>
-      </article>
-    </section>
+          <h3>Next Stop</h3>
+          <p className="routes-next-stop">• {nextStop.name}</p>
+
+          <h4 className="routes-needs-head">Needs</h4>
+          <div className="routes-needs-list">
+            {activeSupplies.length > 0 ? (
+              activeSupplies.slice(0, 3).map((row) => (
+                <p key={row.id}><span>{row.item}</span><span>{row.quantity} {row.unit}</span></p>
+              ))
+            ) : (
+              <p><span>Food Packs</span><span>20 packs</span></p>
+            )}
+          </div>
+
+          <div className="routes-metrics-grid">
+            <div><strong>{summary.distanceLabel}</strong><span>Distance</span></div>
+            <div><strong>{summary.etaLabel}</strong><span>Estimated Time</span></div>
+          </div>
+        </article>
+      </section>
+    </>
   )
 }
 

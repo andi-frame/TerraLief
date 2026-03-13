@@ -44,7 +44,8 @@
 .routes-primary-btn,
 .routes-secondary-btn,
 .routes-link-btn,
-.routes-pill-btn {
+.routes-pill-btn,
+.routes-danger-btn {
   border: 0;
   border-radius: 9999px;
   cursor: pointer;
@@ -61,11 +62,20 @@
 .routes-secondary-btn {
   margin-top: 0.65rem;
   width: 100%;
-  background: transparent;
-  color: #2b2b2b;
+  background: #f7f7f7;
+  color: #232323;
   border: 1px solid var(--color-neutral-300);
-  font-size: 2rem;
+  font-size: 1.05rem;
   padding: 0.76rem 1rem;
+}
+
+.routes-danger-btn {
+  border: 0;
+  background: #e10b0b;
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 0.76rem 1.1rem;
+  min-width: 118px;
 }
 
 .routes-link-btn {
@@ -249,6 +259,65 @@
   pointer-events: none;
 }
 
+.routes-top-controls {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 210px;
+  z-index: 12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.routes-top-controls .routes-secondary-btn {
+  margin-top: 0;
+  width: auto;
+  min-width: 118px;
+  border-color: var(--color-neutral-200);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.routes-warning-banner {
+  position: fixed;
+  z-index: 12;
+  top: 102px;
+  left: 1rem;
+  right: 1rem;
+  border-radius: 1rem;
+  background: #f2c39f;
+  color: #1f1f1f;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.75rem;
+  box-shadow: 0 7px 18px rgba(36, 22, 12, 0.2);
+}
+
+.routes-warning-banner > span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f58b5e;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.routes-warning-banner strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.routes-warning-banner p {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  color: #4a3b32;
+}
+
 .routes-chip {
   display: inline-block;
   margin-bottom: 0.6rem;
@@ -373,7 +442,7 @@
   width: auto;
   min-width: 126px;
   padding: 0.5rem 0.85rem;
-  font-size: 1.35rem;
+  font-size: 1rem;
 }
 
 .routes-next-stop {
@@ -388,6 +457,58 @@
   justify-content: space-between;
   color: var(--color-neutral-700);
   font-size: 1.5rem;
+}
+
+.routes-needs-head {
+  margin: 0.25rem 0 0.15rem;
+  font-size: 1rem;
+  color: #1b1b1b;
+}
+
+.routes-complete-route-name {
+  margin-top: 0.6rem;
+  border-radius: 0.8rem;
+  background: #e8e8e8;
+  padding: 0.45rem 0.6rem;
+  color: #212121;
+  font-size: 0.95rem;
+}
+
+.routes-live-card {
+  padding-top: 0.7rem;
+}
+
+.routes-completed-card {
+  text-align: center;
+}
+
+.routes-completed-card h2 {
+  margin-top: 0.55rem;
+  color: var(--color-blue-900);
+}
+
+.routes-completed-card > p {
+  margin: 0.35rem 0 0.55rem;
+  color: var(--color-neutral-600);
+  font-size: 0.95rem;
+}
+
+.routes-completed-card .routes-actions {
+  margin-top: 0.8rem;
+}
+
+.routes-complete-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgba(29, 87, 255, 0.36);
+  color: var(--color-blue-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .routes-preview-list {
@@ -427,6 +548,8 @@
 
   .routes-link-btn,
   .routes-path-text,
+  .routes-warning-banner strong,
+  .routes-warning-banner p,
   .routes-input-row input,
   .routes-find-card select,
   .routes-custom-input,
@@ -442,6 +565,10 @@
   .routes-file-name,
   .routes-remove-btn {
     font-size: 0.95rem;
+  }
+
+  .routes-top-controls {
+    bottom: 230px;
   }
 
   .routes-route-option {

@@ -42,6 +42,11 @@ function ShelterDetailsSheet({ shelter, onClose }: ShelterDetailsSheetProps) {
       >
         <button className="shelter-sheet-handle" type="button" onClick={onClose} aria-label="Close details" />
 
+        <div className="shelter-sheet-actions">
+          <button type="button" className="primary">Directions</button>
+          <button type="button">Edit Shelter</button>
+        </div>
+
         <h2>{shelter.name}</h2>
 
         <div className="shelter-sheet-meta">
