@@ -50,6 +50,31 @@ interface ApiResponse<T> {
 const ACCESS_TOKEN_KEY = 'terralief-access-token'
 const REFRESH_TOKEN_KEY = 'terralief-refresh-token'
 
+function isAuthBypassEnabled() {
+  if (import.meta.env.VITE_BYPASS_AUTH === 'true') {
+    return true
+  }
+
+  if (typeof window === 'undefined') {
+    return false
+  }
+
+  const params = new URLSearchParams(window.location.search)
+  if (params.get('bypassAuth') === '1') {
+    window.localStorage.setItem('terralief-bypass-auth', 'true')
+    return true
+  }
+
+  return window.localStorage.getItem('terralief-bypass-auth') === 'true'
+}
+
+const BYPASS_USER: AuthUser = {
+  id: 'bypass-user',
+  username: 'frontend_tester',
+  email: 'frontend@test.local',
+  createdAt: new Date(0).toISOString(),
+}
+
 function getApiBaseUrl() {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL as string
@@ -67,6 +92,7 @@ const API_BASE_URL = getApiBaseUrl()
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const authBypassEnabled = isAuthBypassEnabled()
   const [user, setUser] = useState<AuthUser | null>(null)
   const [isBootstrapping, setIsBootstrapping] = useState(true)
   const [authError, setAuthError] = useState<string | null>(null)
@@ -97,6 +123,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const login = async (input: LoginPayload) => {
+    if (authBypassEnabled) {
+      setAuthError(null)
+      setUser(BYPASS_USER)
+      return
+    }
+
     try {
       setAuthError(null)
       const result = await requestJson<AuthApiResult>('/auth/login', {
@@ -115,6 +147,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const register = async (input: RegisterPayload) => {
+    if (authBypassEnabled) {
+      setAuthError(null)
+      setUser(BYPASS_USER)
+      return
+    }
+
     try {
       setAuthError(null)
       await requestJson<RegisterResult>('/auth/register', {
@@ -131,6 +169,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = async () => {
+    if (authBypassEnabled) {
+      setUser(BYPASS_USER)
+      setAuthError(null)
+      return
+    }
+
     const accessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY)
 
     if (accessToken) {
@@ -147,6 +191,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const bootstrap = async () => {
+      if (authBypassEnabled) {
+        setUser(BYPASS_USER)
+        setIsBootstrapping(false)
+        return
+      }
+
       const accessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY)
       if (!accessToken) {
         setIsBootstrapping(false)
@@ -174,7 +224,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     void bootstrap()
-  }, [])
+  }, [authBypassEnabled])
 
   const value = useMemo(
     () => ({ user, isLoggedIn, isBootstrapping, authError, login, register, logout }),
