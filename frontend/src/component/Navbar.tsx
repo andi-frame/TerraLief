@@ -5,7 +5,7 @@ import './Navbar.css'
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, logout } = useAuth()
   const navigate = useNavigate()
 
   return (
@@ -46,19 +46,26 @@ function Navbar() {
               Routes
             </NavLink>
             {isLoggedIn ? (
-              <NavLink to="/profile" onClick={() => setIsMenuOpen(false)}>
-                Profile
-              </NavLink>
+              <button
+                type="button"
+                className="signup-btn"
+                onClick={() => {
+                  void logout().then(() => navigate('/auth'))
+                  setIsMenuOpen(false)
+                }}
+              >
+                Logout
+              </button>
             ) : (
               <button
                 type="button"
                 className="signup-btn"
                 onClick={() => {
-                  navigate('/signup')
+                  navigate('/auth')
                   setIsMenuOpen(false)
                 }}
               >
-                Sign Up
+                Sign In
               </button>
             )}
           </div>

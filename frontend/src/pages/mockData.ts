@@ -74,8 +74,8 @@ export const MAP_REPORTS = [
 export const SHELTER_MAP_ITEMS = [
   {
     id: 1,
-    name: 'Banda Aceh Command Shelter',
-    location: 'Ulee Kareng, Banda Aceh',
+    name: 'Hilltop Evacuation Center',
+    location: 'Hill District',
     count: 110,
     urgency: 'high' as const,
     latLng: [5.5512, 95.3168] as [number, number],
@@ -106,8 +106,8 @@ export const SHELTER_MAP_ITEMS = [
   },
   {
     id: 2,
-    name: 'Lhokseumawe Riverside Shelter',
-    location: 'Banda Sakti, Lhokseumawe',
+    name: 'Riverside Shelter',
+    location: 'Riverside District',
     count: 72,
     urgency: 'medium' as const,
     latLng: [5.1817, 97.1478] as [number, number],
@@ -138,8 +138,8 @@ export const SHELTER_MAP_ITEMS = [
   },
   {
     id: 3,
-    name: 'Green Bridge Shelter',
-    location: 'Takengon, Central Aceh',
+    name: 'Community Hall Shelter',
+    location: 'Community Hall District',
     count: 45,
     urgency: 'low' as const,
     latLng: [4.6217, 96.8512] as [number, number],
@@ -237,22 +237,22 @@ export const SHELTER_MAP_ITEMS = [
 export const ROUTE_STOPS = [
   {
     id: 'route-stop-1',
-    name: 'Takengon Command Shelter',
-    location: 'Takengon',
+    name: 'Hilltop Shelter',
+    location: 'Hill District',
     description: 'Priority food and clean water delivery point.',
     position: [4.6737, 96.7824] as [number, number],
   },
   {
     id: 'route-stop-2',
-    name: 'Bintang Relief Post',
-    location: 'Bintang',
+    name: 'Riverside Shelter',
+    location: 'Riverside District',
     description: 'Medical kits and blankets needed soon.',
     position: [4.6515, 96.8062] as [number, number],
   },
   {
     id: 'route-stop-3',
-    name: 'Laut Tawar Hall',
-    location: 'Laut Tawar',
+    name: 'Community Hall Shelter',
+    location: 'Community Hall District',
     description: 'Final shelter stop with mixed aid supplies.',
     position: [4.6296, 96.7741] as [number, number],
   },

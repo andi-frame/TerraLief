@@ -1,14 +1,44 @@
 import './App.css'
 import Navbar from '../component/Navbar'
 import { AuthProvider } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import HomePage from './HomePage'
 import SheltersPage from './SheltersPage'
 import RoutesPage from './RoutesPage'
 import ReportRoad from './ReportRoad'
+import AuthPage from './AuthPage.tsx'
 
 const queryClient = new QueryClient()
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isLoggedIn, isBootstrapping } = useAuth()
+
+  if (isBootstrapping) {
+    return <main className="home-page" />
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to="/auth" replace />
+  }
+
+  return <>{children}</>
+}
+
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { isLoggedIn, isBootstrapping } = useAuth()
+
+  if (isBootstrapping) {
+    return <main className="home-page" />
+  }
+
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />
+  }
+
+  return <>{children}</>
+}
 
 function AppLayout() {
   const location = useLocation()
@@ -16,20 +46,57 @@ function AppLayout() {
     location.pathname.startsWith('/routes') ||
     location.pathname.startsWith('/shelters') ||
     location.pathname.startsWith('/report-road')
+  const isAuthPage = location.pathname.startsWith('/auth')
 
   return (
     <div className="home-page">
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/shelters" element={<SheltersPage />} />
-        <Route path="/routes/*" element={<RoutesPage />} />
-        <Route path="/report-road/*" element={<ReportRoad />}/>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="/auth"
+          element={
+            <PublicOnlyRoute>
+              <AuthPage />
+            </PublicOnlyRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shelters"
+          element={
+            <ProtectedRoute>
+              <SheltersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/routes/*"
+          element={
+            <ProtectedRoute>
+              <RoutesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/report-road/*"
+          element={
+            <ProtectedRoute>
+              <ReportRoad />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
 
-      {!isMapHeavyPage && (
+      {!isMapHeavyPage && !isAuthPage && (
         <>
           <section className="note-section">
             <div className="note-icon" />
