@@ -375,11 +375,11 @@ function ReportRoadPage() {
                         </div>
 
                         <div className="report-draw-tools">
-                            <button type="button" onClick={undoRoutePoint}>
-                                ↶
+                            <button type="button" onClick={undoRoutePoint} aria-label="Undo last point">
+                                <img src="/icons/undo.svg" alt="" aria-hidden="true" />
                             </button>
-                            <button type="button" onClick={redoRoutePoint}>
-                                ↷
+                            <button type="button" onClick={redoRoutePoint} aria-label="Redo point">
+                                <img src="/icons/redo.svg" alt="" aria-hidden="true" />
                             </button>
                         </div>
 
