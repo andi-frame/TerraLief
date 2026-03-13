@@ -2,16 +2,40 @@ import { useState } from 'react'
 import MapPlaceholder from '../component/MapPlaceholder'
 import UrgencyLegend from '../component/UrgencyLegend'
 import InfoCard from '../component/InfoCard'
-import { ACEH_CENTER, CRITICAL_NEEDS, LEGEND_ITEMS, MAP_REPORTS, SHELTERS } from './mockData'
+import { useShelters } from '../hooks/useShelters'
+import { ACEH_CENTER, LEGEND_ITEMS } from './mockData'
 import './App.css'
 
 function HomePage() {
   const [isAccessMenuOpen, setIsAccessMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('Flood')
 
-  const filteredReports = MAP_REPORTS.filter(
+  const { data: shelters = [], isLoading } = useShelters()
+
+  // Derive map reports from shelters — each shelter is a pin on the map
+  const mapReports = shelters.map((shelter, index) => ({
+    id: index + 1,
+    lat: shelter.lat,
+    lng: shelter.lng,
+    area: shelter.name,
+    type: (shelter.disasterType === 'landslide' ? 'landslide' : 'flood') as 'flood' | 'landslide',
+    urgency: 'medium' as const,
+  }))
+
+  const filteredReports = mapReports.filter(
     (report) => report.type.toLowerCase() === activeTab.toLowerCase(),
   )
+
+  // Critical needs: shelters with high-priority unfulfilled needs
+  // Derived from shelter list (needs come per-shelter in detail view)
+  const nearbyShelters = shelters.slice(0, 5).map((shelter) => ({
+    id: shelter.id,
+    name: shelter.name,
+    location: shelter.capacityStatus,
+    count: shelter.totalOccupants,
+    urgency: (shelter.capacityStatus === 'full' ? 'high'
+      : shelter.capacityStatus === 'limited' ? 'medium' : 'low') as 'high' | 'medium' | 'low',
+  }))
 
   return (
     <>
@@ -67,31 +91,22 @@ function HomePage() {
             </div>
           </div>
 
-          <MapPlaceholder reports={filteredReports} center={ACEH_CENTER} />
+          <MapPlaceholder
+            reports={isLoading ? [] : filteredReports}
+            center={ACEH_CENTER}
+          />
           <UrgencyLegend items={LEGEND_ITEMS} />
         </section>
 
         <section>
-          <h3>Critical Needs in This Area</h3>
-          {CRITICAL_NEEDS.map((need) => (
-            <InfoCard
-              key={need.id}
-              title={need.title}
-              subtitle={need.description}
-              metaLeft={`${need.locations} locations`}
-              urgency={need.urgency}
-            />
-          ))}
-        </section>
-
-        <section>
           <h3>Nearby Shelters</h3>
-          {SHELTERS.map((shelter) => (
+          {isLoading && <p className="section-description">Loading...</p>}
+          {nearbyShelters.map((shelter) => (
             <InfoCard
               key={shelter.id}
               title={shelter.name}
-              subtitle={`◉ ${shelter.location}`}
-              metaLeft={`${shelter.count} people`}
+              subtitle={`⚇ ${shelter.count} people · ${shelter.location}`}
+              metaLeft={shelter.location}
               urgency={shelter.urgency}
             />
           ))}

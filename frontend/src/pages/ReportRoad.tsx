@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import ReliefMap, { type ReliefMarker } from '../component/ReliefMap'
-import { ACEH_CENTER, SHELTER_MAP_ITEMS } from './mockData'
+import { ACEH_CENTER } from './mockData'
+import { useShelters } from '../hooks/useShelters'
+import { useCreateRoute } from '../hooks/useRoutes'
+import { useCreateReport } from '../hooks/useReports'
 import './ReportRoad.css'
 
-type ReportStep = 'search' | 'draw' | 'complete'
+type ReportStep = 'search' | 'draw' | 'complete' | 'error'
 type StartMode = 'current' | 'manual'
 
 type ReportDraft = {
     step: ReportStep
-    destinationId: number | null
+    destinationId: string | null  // now UUID from API
     searchQuery: string
     startMode: StartMode
     manualStart: string
@@ -19,11 +22,6 @@ type ReportDraft = {
     photoName: string
 }
 
-type StoredSubmission = ReportDraft & {
-    submittedAt: string
-}
-
-const REPORT_SUBMISSIONS_KEY = 'terralief-report-road-submissions'
 const DEFAULT_START_POSITION = [4.6848, 96.7659] as [number, number]
 
 const getInitialDraft = (): ReportDraft => ({
@@ -45,6 +43,10 @@ function ReportRoadPage() {
     const [isHazardEditorOpen, setIsHazardEditorOpen] = useState(false)
     const [toastMessage, setToastMessage] = useState('')
 
+    const { data: apiShelters = [] } = useShelters()
+    const createRoute = useCreateRoute()
+    const createReport = useCreateReport()
+
     useEffect(() => {
         setDraft(getInitialDraft())
         setIsSearchOpen(false)
@@ -64,29 +66,22 @@ function ReportRoadPage() {
 
     const destinationOptions = useMemo(() => {
         const query = draft.searchQuery.trim().toLowerCase()
-
-        if (!query) {
-            return SHELTER_MAP_ITEMS
-        }
-
-        return SHELTER_MAP_ITEMS.filter(
-            (shelter) =>
-                shelter.name.toLowerCase().includes(query) ||
-                shelter.location.toLowerCase().includes(query),
+        if (!query) return apiShelters
+        return apiShelters.filter(
+            (shelter) => shelter.name.toLowerCase().includes(query),
         )
-    }, [draft.searchQuery])
+    }, [apiShelters, draft.searchQuery])
 
     const selectedDestination = useMemo(
-        () => SHELTER_MAP_ITEMS.find((shelter) => shelter.id === draft.destinationId) ?? null,
-        [draft.destinationId],
+        () => apiShelters.find((shelter) => shelter.id === draft.destinationId) ?? null,
+        [apiShelters, draft.destinationId],
     )
 
     const polylinePoints = useMemo(() => {
         if (!selectedDestination || draft.routePoints.length === 0) {
             return undefined
         }
-
-        return [DEFAULT_START_POSITION, ...draft.routePoints, selectedDestination.latLng]
+        return [DEFAULT_START_POSITION, ...draft.routePoints, [selectedDestination.lat, selectedDestination.lng] as [number, number]]
     }, [draft.routePoints, selectedDestination])
 
     const routeMarkers = useMemo<ReliefMarker[]>(() => {
@@ -103,16 +98,17 @@ function ReportRoadPage() {
             },
         ]
 
-        if (selectedDestination) {
+        if (draft.destinationId) {
             markers.push({
-                id: `destination-${selectedDestination.id}`,
-                position: selectedDestination.latLng,
+                id: `destination-${selectedDestination?.id ?? ''}`,
+                position: [selectedDestination!.lat, selectedDestination!.lng] as [number, number],
                 kind: 'shelter',
-                title: selectedDestination.name,
-                subtitle: selectedDestination.location,
+                title: selectedDestination!.name,
+                subtitle: selectedDestination!.capacityStatus,
                 popup: 'Destination shelter',
-                urgency: selectedDestination.urgency,
-                count: selectedDestination.count,
+                urgency: (selectedDestination!.capacityStatus === 'full' ? 'high'
+                    : selectedDestination!.capacityStatus === 'limited' ? 'medium' : 'low') as 'high' | 'medium' | 'low',
+                count: selectedDestination!.totalOccupants,
             })
         }
 
@@ -144,7 +140,7 @@ function ReportRoadPage() {
         })
 
         return markers
-    }, [draft.hazardPointIndexes, draft.manualStart, draft.routePoints, draft.startMode, isHazardEditorOpen, selectedDestination])
+    }, [draft.hazardPointIndexes, draft.manualStart, draft.routePoints, draft.startMode, isHazardEditorOpen, selectedDestination, draft.destinationId])
 
     const resetDraft = () => {
         setDraft(getInitialDraft())
@@ -209,7 +205,7 @@ function ReportRoadPage() {
         })
     }
 
-    const submitReport = () => {
+    const submitReport = async () => {
         const missingRequiredFields =
             !draft.destinationId ||
             (draft.startMode === 'manual' && !draft.manualStart.trim()) ||
@@ -221,38 +217,58 @@ function ReportRoadPage() {
             return
         }
 
-        if (typeof window !== 'undefined') {
-            const currentSubmissions = JSON.parse(
-                window.localStorage.getItem(REPORT_SUBMISSIONS_KEY) ?? '[]',
-            ) as StoredSubmission[]
-
-            currentSubmissions.push({
-                ...draft,
-                submittedAt: new Date().toISOString(),
+        try {
+            // 1. Create the route with all drawn points
+            const route = await createRoute.mutateAsync({
+                startLat: DEFAULT_START_POSITION[0],
+                startLng: DEFAULT_START_POSITION[1],
+                targetShelterId: draft.destinationId!,
+                isAiGenerated: false,
+                points: draft.routePoints.map((point, index) => ({
+                    pointOrder: index,
+                    lat: point[0],
+                    lng: point[1],
+                })),
+                importantPoints: draft.hazardPointIndexes.map((index) => ({
+                    lat: draft.routePoints[index][0],
+                    lng: draft.routePoints[index][1],
+                    category: 'hazard' as const,
+                    message: draft.warnings,
+                })),
             })
 
-            window.localStorage.setItem(REPORT_SUBMISSIONS_KEY, JSON.stringify(currentSubmissions))
-        }
+            // 2. Create the report linked to the route
+            await createReport.mutateAsync({
+                routeId: route.id,
+                isManualStart: draft.startMode === 'manual',
+                startLabel: draft.startMode === 'manual' ? draft.manualStart : undefined,
+                notes: draft.warnings,
+            })
 
-        setDraft((currentDraft) => ({
-            ...currentDraft,
-            step: 'complete',
-        }))
+            setDraft((currentDraft) => ({ ...currentDraft, step: 'complete' }))
+        } catch {
+            setToastMessage('Failed to submit report. Please try again.')
+        }
     }
+
+    const centerPos = selectedDestination
+        ? [selectedDestination.lat, selectedDestination.lng] as [number, number]
+        : ACEH_CENTER
 
     return (
         <main className="report-road-page">
             <div className="report-road-map">
                 <ReliefMap
-                    center={selectedDestination?.latLng ?? ACEH_CENTER}
+                    center={centerPos}
                     zoom={9}
                     className="report-road-map-layer"
                     markers={routeMarkers}
                     polyline={polylinePoints}
-                    focusPosition={selectedDestination?.latLng ?? DEFAULT_START_POSITION}
+                    focusPosition={selectedDestination ? [selectedDestination.lat, selectedDestination.lng] as [number, number] : DEFAULT_START_POSITION}
                     focusZoom={selectedDestination ? 11 : 9}
                     onMapClick={addRoutePoint}
                 />
+
             </div>
 
             {draft.step === 'search' && (
@@ -289,7 +305,7 @@ function ReportRoadPage() {
                                         }}
                                     >
                                         <strong>{shelter.name}</strong>
-                                        <span>{shelter.location}</span>
+                                        <span>{shelter.capacityStatus}</span>
                                     </button>
                                 ))}
                             </div>
@@ -361,7 +377,7 @@ function ReportRoadPage() {
                                     <strong>Destination Shelter</strong>
                                     <p>
                                         {selectedDestination
-                                            ? `${selectedDestination.name}. ${selectedDestination.location}`
+                                            ? `${selectedDestination.name}. ${selectedDestination.capacityStatus}`
                                             : 'Destination pending'}
                                     </p>
                                 </div>
@@ -435,12 +451,12 @@ function ReportRoadPage() {
 
                                 <div className="report-modal-map">
                                     <ReliefMap
-                                        center={selectedDestination?.latLng ?? ACEH_CENTER}
+                                        center={centerPos}
                                         zoom={11}
                                         className="report-road-map-layer"
                                         markers={routeMarkers}
                                         polyline={polylinePoints}
-                                        focusPosition={selectedDestination?.latLng ?? DEFAULT_START_POSITION}
+                                        focusPosition={selectedDestination ? [selectedDestination.lat, selectedDestination.lng] as [number, number] : DEFAULT_START_POSITION}
                                         focusZoom={11}
                                     />
                                 </div>
