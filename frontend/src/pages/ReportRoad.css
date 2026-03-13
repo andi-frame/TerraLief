@@ -1,0 +1,538 @@
+.report-road-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.report-road-map {
+  position: absolute;
+  inset: 0;
+}
+
+.report-road-map-layer {
+  width: 100%;
+  height: 100%;
+}
+
+.report-card {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+}
+
+.report-draw-sidebar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: min(92vw, 560px);
+  top: 122px;
+  pointer-events: none;
+}
+
+.report-summary-card,
+.report-banner,
+.report-draw-tools,
+.report-bottom-sheet,
+.report-submit-btn,
+.report-toast {
+  pointer-events: auto;
+}
+
+.report-search-card {
+  top: 122px;
+  width: min(92vw, 560px);
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 1.4rem;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+}
+
+.report-search-card h1,
+.report-notes-block h2,
+.report-modal-card h2,
+.report-success-card h2 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.report-search-card h2 {
+  margin: 1.15rem 0 0;
+  font-size: 2.2rem;
+}
+
+.report-search-card p,
+.report-notes-block p,
+.report-modal-card p,
+.report-success-card p {
+  margin: 0.35rem 0 0;
+  color: var(--color-neutral-600);
+  font-size: 1.4rem;
+}
+
+.report-search-box {
+  margin-top: 1rem;
+  position: relative;
+}
+
+.report-search-box input,
+.report-radio-row--input input[type='text'],
+.report-notes-block textarea {
+  width: 100%;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #111827;
+  font-size: 1.35rem;
+  padding: 0.9rem 1rem;
+}
+
+.report-search-results {
+  margin-top: 0.55rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 1.35rem;
+  background: rgba(255, 255, 255, 0.96);
+  overflow: hidden;
+}
+
+.report-search-results button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 0.95rem 1rem;
+  cursor: pointer;
+}
+
+.report-search-results button + button {
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.report-search-results strong,
+.report-summary-node strong {
+  display: block;
+  font-size: 1.5rem;
+}
+
+.report-search-results span,
+.report-summary-node p {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 1.15rem;
+  color: var(--color-neutral-500);
+}
+
+.report-radio-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.report-radio-row input[type='radio'] {
+  width: 24px;
+  height: 24px;
+}
+
+.report-radio-row span {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.report-radio-row--input input[type='text'] {
+  flex: 1;
+}
+
+.report-search-actions,
+.report-modal-actions {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.report-primary-btn,
+.report-outline-btn,
+.report-dark-btn,
+.report-submit-btn {
+  border: 0;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.report-primary-btn,
+.report-submit-btn {
+  background: var(--color-blue-700);
+  color: #fff;
+}
+
+.report-primary-btn,
+.report-outline-btn,
+.report-dark-btn {
+  padding: 0.9rem 1rem;
+  font-size: 1.45rem;
+}
+
+.report-outline-btn {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--color-neutral-300);
+  color: #1f2937;
+}
+
+.report-summary-card {
+  width: 100%;
+  border-radius: 1.8rem;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 0.9rem 1rem;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+}
+
+.report-summary-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.report-summary-dot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-top: 0.25rem;
+}
+
+.report-summary-dot.hollow {
+  border: 4px solid #5f95ff;
+  background: rgba(95, 149, 255, 0.12);
+}
+
+.report-summary-dot.solid {
+  background: #5f95ff;
+  border: 4px solid rgba(95, 149, 255, 0.25);
+}
+
+.report-summary-divider {
+  width: 2px;
+  height: 24px;
+  margin: 0.25rem 0 0.25rem 9px;
+  background: #dbeafe;
+}
+
+.report-banner {
+  width: 100%;
+  border-radius: 9999px;
+  background: rgba(215, 209, 178, 0.96);
+  padding: 0.7rem 1rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #3f3a1a;
+}
+
+.report-draw-tools {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.report-draw-tools button {
+  width: 92px;
+  border: 0;
+  border-radius: 1.2rem;
+  background: #202124;
+  color: #fff;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.report-draw-tools button img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.report-toast {
+  width: 100%;
+  border-radius: 9999px;
+  background: #ff5b5b;
+  color: #1f2937;
+  text-align: center;
+  padding: 0.9rem 1rem;
+  font-size: 1.2rem;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+}
+
+.report-bottom-sheet {
+  width: 100%;
+  border-radius: 1.8rem;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 0.85rem;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.14);
+  margin-top: auto;
+}
+
+.report-dark-btn {
+  width: 100%;
+  background: #18181b;
+  color: #fff;
+}
+
+.report-dark-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.report-file-btn {
+  display: block;
+  margin-top: 0.85rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 0.95rem 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.report-file-btn input {
+  display: none;
+}
+
+.report-file-btn span {
+  font-size: 1.35rem;
+  color: #111827;
+}
+
+.report-notes-block {
+  margin-top: 1rem;
+}
+
+.report-notes-block textarea {
+  min-height: 96px;
+  margin-top: 0.75rem;
+  resize: vertical;
+}
+
+.report-submit-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 1.5rem;
+}
+
+.report-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 22;
+  background: rgba(17, 24, 39, 0.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.report-modal-card,
+.report-success-card {
+  width: min(92vw, 540px);
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 1.4rem;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16);
+}
+
+.report-modal-map {
+  margin-top: 1rem;
+  height: 260px;
+  border-radius: 1.4rem;
+  overflow: hidden;
+}
+
+.report-success-card {
+  max-width: 520px;
+}
+
+.report-success-icon {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #a5b4fc;
+  color: #1d4ed8;
+  font-size: 3.8rem;
+  line-height: 96px;
+}
+
+.report-modal-backdrop--success {
+  background: rgba(17, 24, 39, 0.3);
+}
+
+@media (max-width: 640px) {
+  .report-search-card,
+  .report-draw-sidebar {
+    width: calc(100vw - 1rem);
+  }
+
+  .report-search-card {
+    top: 108px;
+  }
+
+  .report-draw-sidebar {
+    top: 106px;
+    gap: 0.45rem;
+    height: calc(100vh - 114px);
+    justify-content: flex-start;
+  }
+
+  .report-summary-card,
+  .report-bottom-sheet {
+    border-radius: 1.3rem;
+  }
+
+  .report-summary-card {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .report-summary-node strong,
+  .report-summary-node p {
+    font-size: 0.88rem;
+  }
+
+  .report-summary-dot {
+    width: 16px;
+    height: 16px;
+    margin-top: 0.15rem;
+  }
+
+  .report-banner {
+    font-size: 0.82rem;
+    padding: 0.52rem 0.75rem;
+  }
+
+  .report-draw-tools button {
+    width: 78px;
+    font-size: 1.35rem;
+    padding: 0.42rem 0;
+  }
+
+  .report-bottom-sheet {
+    padding: 0.5rem;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .report-notes-block textarea {
+    min-height: 34px;
+    margin-top: 0.35rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.9rem;
+    resize: none;
+  }
+
+  .report-notes-block {
+    margin-top: 0.42rem;
+  }
+
+  .report-notes-block h2 {
+    font-size: 0.98rem;
+  }
+
+  .report-notes-block p {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  .report-file-btn {
+    margin-top: 0.4rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.95rem;
+  }
+
+  .report-file-btn span {
+    font-size: 0.9rem;
+  }
+
+  .report-dark-btn {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .report-submit-btn {
+    margin-top: 0.35rem;
+  }
+
+  .report-submit-btn {
+    font-size: 1rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .report-toast {
+    font-size: 0.85rem;
+    padding: 0.55rem 0.8rem;
+  }
+
+  .report-search-card h1,
+  .report-search-card h2,
+  .report-notes-block h2,
+  .report-modal-card h2,
+  .report-success-card h2 {
+    font-size: 1.8rem;
+  }
+
+  .report-search-card p,
+  .report-notes-block p,
+  .report-modal-card p,
+  .report-success-card p,
+  .report-search-results strong,
+  .report-summary-node strong,
+  .report-file-btn span,
+  .report-primary-btn,
+  .report-outline-btn,
+  .report-dark-btn {
+    font-size: 0.95rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .report-search-card {
+    top: 112px;
+    left: 1.1rem;
+    transform: none;
+    width: 390px;
+    max-height: calc(100vh - 132px);
+    overflow-y: auto;
+    border-radius: 1.4rem;
+    padding: 1rem;
+  }
+
+  .report-draw-sidebar {
+    left: 1.1rem;
+    transform: none;
+    top: 112px;
+    width: 390px;
+    max-height: calc(100vh - 132px);
+    overflow-y: auto;
+    padding-right: 0.2rem;
+  }
+
+  .report-toast {
+    position: static;
+    transform: none;
+  }
+
+  .report-modal-card {
+    width: min(60vw, 760px);
+  }
+
+  .report-modal-map {
+    height: 360px;
+  }
+}

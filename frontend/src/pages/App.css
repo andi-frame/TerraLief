@@ -1,0 +1,359 @@
+/* =========================================
+   HOME PAGE STYLES
+========================================= */
+.home-page {
+  min-height: 100vh;
+  background: var(--color-neutral-50);
+  color: #161616;
+}
+
+.hero-section {
+  position: relative;
+  padding: 1.125rem;
+  padding-top: 7.25rem;
+  background:
+    linear-gradient(to bottom, rgba(10, 33, 24, 0.68), rgba(255, 255, 255, 0.354), rgba(248, 248, 248, 0.92) 68%, #f8f8f8),
+    url('/Image_01.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-content {
+  max-width: 460px;
+  margin: 4.2rem auto 2.8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.hero-content h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 7vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.hero-content p {
+  max-width: 390px;
+  color: var(--color-neutral-700);
+  font-size: 1.1rem;
+}
+
+.hero-content button {
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  border-radius: 16px;
+  padding: 8px 24px;
+  background: var(--color-blue-900);
+  box-shadow: 2px 2px 6px 0 rgba(255, 255, 255, 0.30) inset;
+  color: #fff;
+  font-size: 1.9rem;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.page-content {
+  width: min(100%, 780px);
+  margin: 0 auto;
+  padding: 0 1.125rem 2.2rem;
+}
+
+.page-content section {
+  margin-bottom: 1.65rem;
+}
+
+.page-content h2,
+.page-content h3 {
+  margin: 0;
+  font-size: clamp(1.75rem, 5vw, 2.2rem);
+  line-height: 1.25;
+}
+
+.page-content h4 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.section-description {
+  margin: 0.65rem 0 1.3rem;
+  color: var(--color-neutral-500);
+}
+
+.map-controls {
+  display: flex;
+  gap: 1.1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.access-control {
+  position: relative;
+}
+
+.access-trigger {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 1.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.access-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: min(220px, calc(100vw - 3rem));
+  background: #fff;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 1.3rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.09);
+  overflow: hidden;
+  z-index: 3;
+}
+
+.access-dropdown button {
+  border: 0;
+  background: #fff;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.access-dropdown button + button {
+  border-top: 1px solid var(--color-neutral-100);
+}
+
+.arrow-icon {
+  width: 14px;
+  height: auto;
+  transition: transform 0.3s ease;
+  transform: rotate(180deg); 
+}
+
+.arrow-icon.is-flipped {
+  transform: rotate(0deg);
+}
+
+.access-trigger span {
+  display: none;
+}
+
+.map-tabs {
+  display: flex;
+  gap: 1rem;
+}
+
+.map-tabs button {
+  border: 0;
+  background: transparent;
+  color: var(--color-neutral-400);
+  font-size: 1.9rem;
+  padding: 0 0 0.35rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.map-tabs .active {
+  color: #101010;
+  border-bottom-color: #101010;
+}
+
+.urgency.high { color: var(--color-danger-200); }
+.urgency.medium { color: var(--color-warning-300); }
+.urgency.low { color: var(--color-success-200); }
+
+.note-section {
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--color-neutral-200);
+  text-align: center;
+  padding: 2.3rem 1rem 2.1rem;
+}
+
+.note-icon {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.note-logo {
+  width: 200px;
+  max-width: 25vw;
+  height: auto;
+  display: block;
+  margin: 0.55rem auto 0;
+}
+
+.note-section p {
+  max-width: 470px;
+  margin: 1.2rem auto 0;
+  font-size: 1.9rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+footer {
+  background: #26272b;
+  color: var(--color-neutral-300);
+  text-align: center;
+  padding: 1.15rem;
+  font-size: 1.8rem;
+}
+
+
+/* =========================================
+   SHELTERS PAGE STYLES (Fixed Z-Indexes & Overlay)
+========================================= */
+
+.shelters-map-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #2f3e4d;
+}
+
+.shelters-map-canvas {
+  position: absolute;
+  top: 7.25rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.shelters-map-layer {
+  width: 100%;
+  height: 100%;
+}
+
+.shelters-ui-overlay {
+  position: absolute;
+  top: 7.25rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Re-enable clicks on the UI items themselves */
+.shelter-pill,
+.shelter-floating-list {
+  pointer-events: auto; 
+}
+
+.shelter-pill {
+  position: fixed;
+  z-index: 12;
+  top: 132px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 9999px;
+  padding: 0.6rem 1.1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.shelter-floating-list {
+  position: fixed;
+  z-index: 11;
+  left: 0;
+  right: 0;
+  bottom: 2rem; 
+  padding: 0 1rem;
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto; 
+  padding-bottom: 1rem;
+}
+
+.shelter-floating-card {
+  min-width: 280px; 
+  flex-shrink: 0;
+  border: 1px solid var(--color-neutral-200);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 1.35rem;
+  text-align: left;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.shelter-floating-card:hover,
+.shelter-floating-card:focus,
+.shelter-floating-card.active {
+  border-color: var(--color-blue-600);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.shelter-floating-card h3 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.shelter-floating-card p {
+  margin: 0.3rem 0 0;
+  font-size: 1.8rem;
+  color: var(--color-neutral-700);
+}
+
+.shelter-floating-card > div {
+  margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  font-size: 1.7rem;
+  color: var(--color-neutral-500);
+}
+
+@media (max-width: 640px) {
+  .home-page { font-size: 8px; }
+  
+  .hero-content {
+    max-width: 460px;
+    margin: 8.5rem auto 2.8rem; 
+    text-align: center;
+  }
+  .hero-content h1 { font-size: 3rem; }
+  .hero-content p { font-size: 1.1rem; color: var(--color-neutral-600); }
+  .hero-content button { font-size: 1.1rem; }
+  
+  .page-content h2, .page-content h3 { font-size: 2rem; }
+  .page-content h4, .access-trigger, .map-tabs button,
+  .section-description,
+  .access-dropdown button, footer { font-size: 1rem; }
+  
+  .note-section p { font-size: 0.98rem; }
+
+  .shelter-pill {
+    top: 108px;
+    font-size: 1rem;
+  }
+  .shelter-floating-list {
+    bottom: 2rem;
+  }
+  .shelter-floating-card {
+    min-width: 240px;
+  }
+  .shelter-floating-card h3 { font-size: 1.4rem; }
+  .shelter-floating-card p, .shelter-floating-card > div {
+    font-size: 1rem;
+  }
+}

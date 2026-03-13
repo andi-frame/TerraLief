@@ -1,0 +1,20 @@
+.map-placeholder-shell {
+  position: relative;
+  width: 100%;
+  height: clamp(210px, 36vw, 310px);
+  border-radius: 1.45rem;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+  z-index: 0;
+  isolation: isolate;
+}
+
+.map-placeholder-shell .leaflet-container {
+  border-radius: inherit;
+}
+
+@media (max-width: 640px) {
+  .map-placeholder-shell {
+    height: 240px;
+  }
+}

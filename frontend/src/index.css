@@ -1,11 +1,77 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+@font-face {
+  font-family: 'NeueMontreal';
+  src: url('/fonts/NeueMontreal-Regular.woff2') format('woff2');
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@font-face {
+  font-family: 'NeueMontreal';
+  src: url('/fonts/NeueMontreal-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NeueMontreal';
+  src: url('/fonts/NeueMontreal-Medium.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-main: 'NeueMontreal', sans-serif;
+
+  --color-warning-100: #fff4c6;
+  --color-warning-200: #ffc120;
+  --color-warning-300: #f99f07;
+
+  --color-success-100: #78fdb8;
+  --color-success-200: #04b55b;
+  --color-success-300: #0c5b35;
+
+  --color-orange-50: #fff5ed;
+  --color-orange-100: #ffe7d4;
+  --color-orange-200: #ffcba9;
+  --color-orange-300: #ffa772;
+  --color-orange-400: #fe7739;
+  --color-orange-500: #fc4b08;
+  --color-orange-600: #ed3809;
+  --color-orange-700: #c52709;
+  --color-orange-800: #9c2010;
+  --color-orange-900: #7d1d11;
+  --color-orange-950: #440c06;
+
+  --color-neutral-50: #f8f8f8;
+  --color-neutral-100: #f0f0f0;
+  --color-neutral-200: #dcdcdc;
+  --color-neutral-300: #bdbdbd;
+  --color-neutral-400: #989898;
+  --color-neutral-500: #7c7c7c;
+  --color-neutral-600: #656565;
+  --color-neutral-700: #525252;
+  --color-neutral-800: #464646;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #292929;
+
+  --color-danger-100: #ff5b5e;
+  --color-danger-200: #df0004;
+  --color-danger-300: #680002;
+
+  --color-blue-50: #e6f4ff;
+  --color-blue-100: #d1eaff;
+  --color-blue-200: #acd5ff;
+  --color-blue-300: #7ab7ff;
+  --color-blue-400: #4687ff;
+  --color-blue-500: #1d57ff;
+  --color-blue-600: #0032ff;
+  --color-blue-700: #0035ff;
+  --color-blue-800: #002edc;
+  --color-blue-900: #0526ae;
+  --color-blue-950: #031363;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +79,39 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-950);
+
+  font-family: var(--font-main);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+button, 
+input, 
+select, 
+textarea {
+  font-family: inherit;
+}
+
+#root {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 550; 
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+em {
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  font-style: italic;
 }
