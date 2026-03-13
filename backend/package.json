@@ -4,9 +4,9 @@
     "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
     "test": "bun test tests/core && bun test tests/services && bun test tests/controllers",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:generate": "bun x --bun drizzle-kit generate",
+    "db:migrate": "bun x --bun drizzle-kit migrate",
+    "db:studio": "bun x --bun drizzle-kit studio"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.5.0",

@@ -1,5 +1,9 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useMemo } from 'react'
+import { authService } from '../services/auth.service'
+import { useAuthStore, type AuthUser } from '../store/authStore'
+import axios from 'axios'
 
+// ─── Public types (unchanged) ──────────────────────────────────────────────────
 interface AuthContextType {
   user: AuthUser | null
   isLoggedIn: boolean
@@ -8,13 +12,6 @@ interface AuthContextType {
   login: (input: LoginPayload) => Promise<void>
   register: (input: RegisterPayload) => Promise<void>
   logout: () => Promise<void>
-}
-
-interface AuthUser {
-  id: string
-  username: string
-  email: string
-  createdAt: string
 }
 
 interface LoginPayload {
@@ -28,43 +25,15 @@ interface RegisterPayload {
   password: string
 }
 
-interface AuthApiResult {
-  accessToken: string
-  refreshToken: string
-  user: AuthUser
-}
-
-interface RegisterResult {
-  id: string
-  username: string
-  email: string
-  createdAt: string
-}
-
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-}
-
-const ACCESS_TOKEN_KEY = 'terralief-access-token'
-const REFRESH_TOKEN_KEY = 'terralief-refresh-token'
-
+// ─── Auth bypass (dev convenience) ───────────────────────────────────────────
 function isAuthBypassEnabled() {
-  if (import.meta.env.VITE_BYPASS_AUTH === 'true') {
-    return true
-  }
-
-  if (typeof window === 'undefined') {
-    return false
-  }
-
+  if (import.meta.env.VITE_BYPASS_AUTH === 'true') return true
+  if (typeof window === 'undefined') return false
   const params = new URLSearchParams(window.location.search)
   if (params.get('bypassAuth') === '1') {
     window.localStorage.setItem('terralief-bypass-auth', 'true')
     return true
   }
-
   return window.localStorage.getItem('terralief-bypass-auth') === 'true'
 }
 
@@ -75,173 +44,136 @@ const BYPASS_USER: AuthUser = {
   createdAt: new Date(0).toISOString(),
 }
 
-function getApiBaseUrl() {
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL as string
-  }
-
-  if (typeof window !== 'undefined') {
-    return `${window.location.protocol}//${window.location.hostname}:3001`
-  }
-
-  return 'http://localhost:3001'
-}
-
-const API_BASE_URL = getApiBaseUrl()
-
+// ─── Context ──────────────────────────────────────────────────────────────────
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const authBypassEnabled = isAuthBypassEnabled()
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [isBootstrapping, setIsBootstrapping] = useState(true)
-  const [authError, setAuthError] = useState<string | null>(null)
+
+  // Derive all state from Zustand store
+  const user = useAuthStore((s) => s.user)
+  const accessToken = useAuthStore((s) => s.accessToken)
+  const isBootstrapping = useAuthStore((s) => s.isBootstrapping)
+  const authError = useAuthStore((s) => s.authError)
+  const { setUser, setTokens, setAuthError, setBootstrapping, clearAuth } = useAuthStore.getState()
 
   const isLoggedIn = Boolean(user)
 
-  const persistTokens = (accessToken: string, refreshToken: string) => {
-    window.localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
-    window.localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
-  }
+  // ─── Login ────────────────────────────────────────────────────────────────
+  const login = useCallback(
+    async (input: LoginPayload) => {
+      if (authBypassEnabled) {
+        setAuthError(null)
+        setUser(BYPASS_USER)
+        return
+      }
 
-  const clearTokens = () => {
-    window.localStorage.removeItem(ACCESS_TOKEN_KEY)
-    window.localStorage.removeItem(REFRESH_TOKEN_KEY)
-  }
+      try {
+        setAuthError(null)
+        const result = await authService.login(input)
+        setTokens(result.accessToken, result.refreshToken)
+        setUser(result.user)
+      } catch (error) {
+        const message = extractMessage(error, 'Login failed')
+        setAuthError(message)
+        throw new Error(message)
+      }
+    },
+    [authBypassEnabled],
+  )
 
-  const requestJson = async <T,>(path: string, init?: RequestInit): Promise<T> => {
-    const response = await fetch(`${API_BASE_URL}${path}`, init).catch(() => {
-      throw new Error(`Unable to connect to auth API at ${API_BASE_URL}. Make sure backend is running.`)
-    })
+  // ─── Register ─────────────────────────────────────────────────────────────
+  const register = useCallback(
+    async (input: RegisterPayload) => {
+      if (authBypassEnabled) {
+        setAuthError(null)
+        setUser(BYPASS_USER)
+        return
+      }
 
-    const body = (await response.json().catch(() => ({ success: false }))) as ApiResponse<T>
-    if (!response.ok || !body.success || !body.data) {
-      throw new Error(body.error ?? `Request failed: ${path}`)
-    }
+      try {
+        setAuthError(null)
+        await authService.register(input)
+        // Auto-login after successful registration
+        await login({ email: input.email, password: input.password })
+      } catch (error) {
+        const message = extractMessage(error, 'Registration failed')
+        setAuthError(message)
+        throw new Error(message)
+      }
+    },
+    [authBypassEnabled, login],
+  )
 
-    return body.data
-  }
-
-  const login = async (input: LoginPayload) => {
+  // ─── Logout ───────────────────────────────────────────────────────────────
+  const logout = useCallback(async () => {
     if (authBypassEnabled) {
-      setAuthError(null)
       setUser(BYPASS_USER)
+      setAuthError(null)
       return
     }
 
     try {
-      setAuthError(null)
-      const result = await requestJson<AuthApiResult>('/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      })
-
-      persistTokens(result.accessToken, result.refreshToken)
-      setUser(result.user)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed'
-      setAuthError(message)
-      throw error
+      await authService.logout()
+    } catch {
+      // ignore — clear local state regardless
+    } finally {
+      clearAuth()
     }
-  }
+  }, [authBypassEnabled])
 
-  const register = async (input: RegisterPayload) => {
-    if (authBypassEnabled) {
-      setAuthError(null)
-      setUser(BYPASS_USER)
-      return
-    }
-
-    try {
-      setAuthError(null)
-      await requestJson<RegisterResult>('/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      })
-      await login({ email: input.email, password: input.password })
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Registration failed'
-      setAuthError(message)
-      throw error
-    }
-  }
-
-  const logout = async () => {
-    if (authBypassEnabled) {
-      setUser(BYPASS_USER)
-      setAuthError(null)
-      return
-    }
-
-    const accessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY)
-
-    if (accessToken) {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }).catch(() => undefined)
-    }
-
-    clearTokens()
-    setUser(null)
-    setAuthError(null)
-  }
-
+  // ─── Bootstrap — restore session on page load ─────────────────────────────
   useEffect(() => {
     const bootstrap = async () => {
       if (authBypassEnabled) {
         setUser(BYPASS_USER)
-        setIsBootstrapping(false)
+        setBootstrapping(false)
         return
       }
 
-      const accessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY)
       if (!accessToken) {
-        setIsBootstrapping(false)
+        setBootstrapping(false)
         return
       }
 
-      const response = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }).catch(() => null)
-
-      if (!response || !response.ok) {
-        clearTokens()
-        setIsBootstrapping(false)
-        return
+      try {
+        const profile = await authService.getMe()
+        setUser(profile)
+      } catch {
+        // getMe failed — axios interceptor will have attempted refresh already;
+        // if it still failed the interceptor calls clearAuth(); we just finish bootstrapping
+        clearAuth()
+      } finally {
+        setBootstrapping(false)
       }
-
-      const body = (await response.json()) as ApiResponse<AuthUser>
-      if (body.success && body.data) {
-        setUser(body.data)
-      } else {
-        clearTokens()
-      }
-
-      setIsBootstrapping(false)
     }
 
     void bootstrap()
-  }, [authBypassEnabled])
+    // Run only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const value = useMemo(
+  const value = useMemo<AuthContextType>(
     () => ({ user, isLoggedIn, isBootstrapping, authError, login, register, logout }),
-    [authError, isBootstrapping, isLoggedIn, user],
+    [user, isLoggedIn, isBootstrapping, authError, login, register, logout],
   )
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider')
   return context
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function extractMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    // Backend sends { success: false, error: string }
+    const data = error.response?.data as { error?: string } | undefined
+    return data?.error ?? error.message ?? fallback
+  }
+  if (error instanceof Error) return error.message
+  return fallback
 }
