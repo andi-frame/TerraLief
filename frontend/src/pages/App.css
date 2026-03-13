@@ -222,10 +222,12 @@ footer {
   background: #2f3e4d;
 }
 
-/* Static Map Placeholder Canvas */
 .shelters-map-canvas {
   position: absolute;
-  inset: 0;
+  top: 7.25rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 1;
 }
 
@@ -234,10 +236,12 @@ footer {
   height: 100%;
 }
 
-/* Floating UI Overlay (Passes clicks through empty space) */
 .shelters-ui-overlay {
   position: absolute;
-  inset: 0;
+  top: 7.25rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
   pointer-events: none; 
   display: flex;
@@ -340,7 +344,7 @@ footer {
 
   .shelter-pill {
     top: 108px;
-    font-size: 1.4rem;
+    font-size: 1rem;
   }
   .shelter-floating-list {
     bottom: 2rem;

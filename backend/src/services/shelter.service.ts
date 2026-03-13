@@ -12,7 +12,7 @@ export const ShelterService = {
       shelterList.map(async (shelter) => {
         const pop = await ShelterRepository.findPopulation(shelter.id)
         const totalOccupants = pop
-          ? pop.male + pop.female + pop.children + pop.elderly
+          ? pop.male + pop.female + pop.children + pop.adults + pop.elderly
           : 0
         return { ...shelter, population: pop ?? null, totalOccupants }
       }),

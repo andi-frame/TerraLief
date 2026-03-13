@@ -5,6 +5,7 @@ import { pgTable, uuid, varchar, real, integer, timestamp } from 'drizzle-orm/pg
 export const shelters = pgTable('shelters', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
+  address: varchar('address', { length: 255 }).notNull().default(''),
   lat: real('lat').notNull(),
   lng: real('lng').notNull(),
   disasterType: varchar('disaster_type', { length: 50 }).notNull(), // 'flood' | 'landslide'
@@ -24,8 +25,13 @@ export const shelterPopulations = pgTable('shelter_populations', {
   male: integer('male').notNull().default(0),
   female: integer('female').notNull().default(0),
   children: integer('children').notNull().default(0), // age 0–14
+  adults: integer('adults').notNull().default(0),     // age 15-64
   elderly: integer('elderly').notNull().default(0),   // age 65+
-  medical: integer('medical').notNull().default(0),   // people requiring medical attention
+  medical: integer('medical').notNull().default(0),   // medical attention needed
+  mobility: integer('mobility').notNull().default(0), // limited mobility
+  chronic: integer('chronic').notNull().default(0),   // chronic illness
+  pregnant: integer('pregnant').notNull().default(0), // pregnant women
+  infants: integer('infants').notNull().default(0),   // infants/babies
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 

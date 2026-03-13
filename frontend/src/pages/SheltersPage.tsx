@@ -85,7 +85,31 @@ function SheltersPage() {
       </div>
 
       <div className="shelters-ui-overlay">
-        <div className="shelter-pill">Nearby Shelters</div>
+        <div style={{ position: 'fixed', top: '132px', left: '1rem', right: '1rem', zIndex: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'none' }}>
+          <div className="shelter-pill" style={{ position: 'static', transform: 'none' }}>Nearby Shelters</div>
+          <button 
+            type="button" 
+            onClick={() => navigate('/shelters/create')}
+            style={{
+              pointerEvents: 'auto',
+              background: '#0d2ee2',
+              color: 'white',
+              border: 'none',
+              padding: '0.6rem 1rem',
+              borderRadius: '20px',
+              fontSize: '0.9rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+            }}
+          >
+            <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>+</span>
+            Create Shelter
+          </button>
+        </div>
 
         <section className="shelter-floating-list" aria-label="Nearby shelters list">
           {isLoading && <p style={{ color: 'white', padding: '1rem' }}>Loading shelters...</p>}

@@ -8,8 +8,13 @@ export interface ShelterPopulation {
   male: number
   female: number
   children: number
+  adults: number
   elderly: number
   medical: number
+  mobility: number
+  chronic: number
+  pregnant: number
+  infants: number
   updatedAt: string
 }
 
@@ -35,6 +40,7 @@ export interface ShelterCheckin {
 export interface Shelter {
   id: string
   name: string
+  address: string
   lat: number
   lng: number
   disasterType: string
@@ -53,8 +59,13 @@ export interface UpsertPopulationInput {
   male?: number
   female?: number
   children?: number
+  adults?: number
   elderly?: number
   medical?: number
+  mobility?: number
+  chronic?: number
+  pregnant?: number
+  infants?: number
 }
 
 export interface CreateNeedInput {
@@ -85,6 +96,7 @@ export const shelterService = {
 
   async create(input: {
     name: string
+    address?: string
     lat: number
     lng: number
     disasterType: string
@@ -97,6 +109,7 @@ export const shelterService = {
 
   async update(id: string, input: Partial<{
     name: string
+    address: string
     lat: number
     lng: number
     disasterType: string

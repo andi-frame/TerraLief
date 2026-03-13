@@ -9,6 +9,8 @@ import SheltersPage from './SheltersPage'
 import RoutesPage from './RoutesPage'
 import ReportRoad from './ReportRoad'
 import AuthPage from './AuthPage.tsx'
+import CreateShelterPage from './CreateShelterPage'
+import PinLocationPage from './PinLocationPage'
 
 const queryClient = new QueryClient()
 
@@ -44,7 +46,7 @@ function AppLayout() {
   const location = useLocation()
   const isMapHeavyPage =
     location.pathname.startsWith('/routes') ||
-    location.pathname.startsWith('/shelters') ||
+    location.pathname.startsWith('/shelters/create/pin') ||
     location.pathname.startsWith('/report-road')
   const isAuthPage = location.pathname.startsWith('/auth')
 
@@ -74,6 +76,22 @@ function AppLayout() {
           element={
             <ProtectedRoute>
               <SheltersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shelters/create"
+          element={
+            <ProtectedRoute>
+              <CreateShelterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shelters/create/pin"
+          element={
+            <ProtectedRoute>
+              <PinLocationPage />
             </ProtectedRoute>
           }
         />

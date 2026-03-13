@@ -8,6 +8,13 @@
       "when": 1773405713952,
       "tag": "0000_fancy_wallop",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773408195029,
+      "tag": "0001_left_kulan_gath",
+      "breakpoints": true
     }
   ]
 }

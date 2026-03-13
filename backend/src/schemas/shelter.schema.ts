@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 export const createShelterSchema = z.object({
   name: z.string().min(1).max(255),
+  address: z.string().max(255).default(''),
   lat: z.number(),
   lng: z.number(),
   disasterType: z.string().min(1).max(50),
@@ -19,8 +20,13 @@ export const upsertPopulationSchema = z.object({
   male: z.number().int().min(0).default(0),
   female: z.number().int().min(0).default(0),
   children: z.number().int().min(0).default(0),
+  adults: z.number().int().min(0).default(0),
   elderly: z.number().int().min(0).default(0),
   medical: z.number().int().min(0).default(0),
+  mobility: z.number().int().min(0).default(0),
+  chronic: z.number().int().min(0).default(0),
+  pregnant: z.number().int().min(0).default(0),
+  infants: z.number().int().min(0).default(0),
 })
 
 // ─── Shelter Need ─────────────────────────────────────────────────────────────
