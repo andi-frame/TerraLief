@@ -346,13 +346,3 @@ def extract_text_google(image_bytes: bytes) -> str:
     """Extract text menggunakan Google Cloud Vision API."""
     return _google_vision_extract(_preprocess(image_bytes))
 
-
-def extract_text(image_bytes: bytes) -> str:
-    """Extract text menggunakan engine yang dikonfigurasi via OCR_ENGINE env."""
-    engine = os.getenv("OCR_ENGINE", "easyocr").lower()
-    if engine == "google":
-        return extract_text_google(image_bytes)
-    elif engine == "easyocr":
-        return extract_text_easyocr(image_bytes)
-    else:
-        raise ValueError(f"Unknown OCR_ENGINE: {engine!r}. Use 'easyocr' or 'google'.")
