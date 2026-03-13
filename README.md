@@ -7,6 +7,11 @@ https://youtu.be/PMIEwL-dbP8
 
 The Report is inside /docs folder
 
+Deployed links:
+- Web: https://terralief.byhan.id/
+- Backend: https://terralief-be.byhan.id/docs
+- ML: https://terralief-ml.byhan.id/docs
+
 This repository is a multi-service project containing:
 
 - A **frontend** web client (Vite + React + TypeScript)
