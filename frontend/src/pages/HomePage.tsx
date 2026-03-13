@@ -17,7 +17,7 @@ function HomePage() {
     <>
       <header className="hero-section">
         <div className="hero-content">
-          <h1>What’s Happening Around You?</h1>
+          <h1>What's Happening Around You?</h1>
           <p>Stay informed. Monitor active disaster reports and road access conditions near you.</p>
           <button type="button">Report Now</button>
         </div>
