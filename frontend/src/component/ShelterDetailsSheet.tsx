@@ -24,9 +24,11 @@ interface ShelterSheetData {
 interface ShelterDetailsSheetProps {
   shelter: ShelterSheetData | null
   onClose: () => void
+  onDirections?: (shelter: ShelterSheetData) => void
+  onEdit?: (shelter: ShelterSheetData) => void
 }
 
-function ShelterDetailsSheet({ shelter, onClose }: ShelterDetailsSheetProps) {
+function ShelterDetailsSheet({ shelter, onClose, onDirections, onEdit }: ShelterDetailsSheetProps) {
   if (!shelter) {
     return null
   }
@@ -43,8 +45,14 @@ function ShelterDetailsSheet({ shelter, onClose }: ShelterDetailsSheetProps) {
         <button className="shelter-sheet-handle" type="button" onClick={onClose} aria-label="Close details" />
 
         <div className="shelter-sheet-actions">
-          <button type="button" className="primary">Directions</button>
-          <button type="button">Edit Shelter</button>
+          <button
+            type="button"
+            className="primary"
+            onClick={() => onDirections?.(shelter)}
+          >
+            Directions
+          </button>
+          <button type="button" onClick={() => onEdit?.(shelter)}>Edit Shelter</button>
         </div>
 
         <h2>{shelter.name}</h2>

@@ -121,9 +121,14 @@ function getActiveRoute(routeId?: string) {
 
 function RouteMapBackdrop({ withPath = false, withActivePin = false }: { withPath?: boolean; withActivePin?: boolean }) {
   const location = useLocation()
-  const locationState = (location.state ?? {}) as { routeId?: string }
+  const locationState = (location.state ?? {}) as { routeId?: string; destinationShelterName?: string }
   const savedRouteState = loadSavedRoute()
   const activeRoute = getActiveRoute(locationState.routeId ?? savedRouteState?.routeId)
+  const destinationStop = locationState.destinationShelterName
+    ? activeRoute.stops.find((stop) =>
+        stop.name.toLowerCase().includes(locationState.destinationShelterName!.toLowerCase().split(' ')[0]),
+      )
+    : null
 
   const markers = useMemo<ReliefMarker[]>(() => {
     const disasterMarkers = MAP_REPORTS.slice(0, 4).map((report) => ({
@@ -182,7 +187,7 @@ function RouteMapBackdrop({ withPath = false, withActivePin = false }: { withPat
       className="routes-map-layer"
       markers={markers}
       polyline={withPath ? activeRoute.path : undefined}
-      focusPosition={withPath ? activeRoute.path[0] : null}
+      focusPosition={withPath ? (destinationStop?.position ?? activeRoute.path[0]) : null}
       focusZoom={withPath ? 10 : 8}
     />
   )
@@ -498,18 +503,30 @@ function BestRouteCard() {
 function StartRouteCard() {
   const navigate = useNavigate()
   const location = useLocation()
-  const locationState = (location.state ?? {}) as { formData?: RouteFormData; routeId?: string }
+  const locationState = (location.state ?? {}) as {
+    formData?: RouteFormData
+    routeId?: string
+    destinationShelterName?: string
+  }
   const savedRoute = loadSavedRoute()
   const formData = locationState.formData ?? savedRoute?.formData ?? DEFAULT_ROUTE_FORM
   const activeRoute = getActiveRoute(locationState.routeId ?? savedRoute?.routeId)
+  const destinationShelterName = locationState.destinationShelterName
+  const destinationStopIndex = destinationShelterName
+    ? activeRoute.stops.findIndex((stop) =>
+        stop.name.toLowerCase().includes(destinationShelterName.toLowerCase().split(' ')[0]),
+      )
+    : -1
   const summary = getRouteSummary(formData, activeRoute.id)
   const [completedStops, setCompletedStops] = useState(0)
   const [skippedStops, setSkippedStops] = useState(0)
   const activeSupplies = formData.supplies.filter((row) => row.item.trim())
   const progressedStops = completedStops + skippedStops
-  const stopCount = Math.min(summary.sheltersToAssist, activeRoute.stops.length)
+  const stopCount = destinationStopIndex >= 0 ? 1 : Math.min(summary.sheltersToAssist, activeRoute.stops.length)
   const isRouteCompleted = progressedStops >= stopCount
-  const nextStop = activeRoute.stops[Math.min(progressedStops, stopCount - 1)]
+  const nextStop = destinationStopIndex >= 0
+    ? activeRoute.stops[destinationStopIndex]
+    : activeRoute.stops[Math.min(progressedStops, stopCount - 1)]
   const activeIncident = ROUTE_INCIDENTS.find((incident) => incident.stopIndex === progressedStops)
 
   const goToNextStop = (mode: 'completed' | 'skipped') => {
@@ -534,6 +551,9 @@ function StartRouteCard() {
           <p>You have successfully delivered aid to all shelters.</p>
 
           <div className="routes-complete-route-name">{activeRoute.name}</div>
+          {destinationShelterName && (
+            <p className="routes-path-text">Destination: {destinationShelterName}</p>
+          )}
           <p className="routes-path-text muted">{activeRoute.stops.map((stop) => stop.name).join(' - ')}</p>
 
           <div className="routes-metrics-grid">
@@ -591,6 +611,9 @@ function StartRouteCard() {
           </div>
 
           <div className="routes-complete-route-name">{activeRoute.name}</div>
+          {destinationShelterName && (
+            <p className="routes-path-text">Destination: {destinationShelterName}</p>
+          )}
           <p className="routes-path-text muted">{activeRoute.stops.map((stop) => stop.name).join(' - ')}</p>
 
           <h3>Next Stop</h3>

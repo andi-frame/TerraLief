@@ -1,10 +1,25 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ReliefMap from '../component/ReliefMap'
 import ShelterDetailsSheet from '../component/ShelterDetailsSheet'
-import { ACEH_CENTER, SHELTER_MAP_ITEMS } from './mockData'
+import { ACEH_CENTER, ROUTE_OPTIONS, SHELTER_MAP_ITEMS } from './mockData'
 import './App.css'
 
+function getSuggestedRouteId(shelterName: string) {
+  const tokens = shelterName
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((token) => token.length > 3)
+
+  const matchedRoute = ROUTE_OPTIONS.find((route) =>
+    route.stops.some((stop) => tokens.some((token) => stop.name.toLowerCase().includes(token))),
+  )
+
+  return matchedRoute?.id ?? ROUTE_OPTIONS[0].id
+}
+
 function SheltersPage() {
+  const navigate = useNavigate()
   const [selectedShelterId, setSelectedShelterId] = useState<number | null>(null)
 
   const selectedShelter = useMemo(
@@ -66,7 +81,19 @@ function SheltersPage() {
         </section>
       </div>
 
-      <ShelterDetailsSheet shelter={selectedShelter} onClose={() => setSelectedShelterId(null)} />
+      <ShelterDetailsSheet
+        shelter={selectedShelter}
+        onClose={() => setSelectedShelterId(null)}
+        onDirections={(shelter) => {
+          const routeId = getSuggestedRouteId(shelter.name)
+          navigate('/routes/start', {
+            state: {
+              routeId,
+              destinationShelterName: shelter.name,
+            },
+          })
+        }}
+      />
     </main>
   )
 }
