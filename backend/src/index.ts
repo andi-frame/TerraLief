@@ -21,12 +21,12 @@ app.get('/health', (c) => c.json({ status: 'ok', timestamp: new Date().toISOStri
 app.get('/openapi.json', (c) => c.json(openApiSpec))
 app.get('/docs', apiReference({ url: '/openapi.json' }))
 
-// ─── Public Auth Routes ──────────────────────────────────────────────────────
-app.route('/auth', userController)
-
-// ─── Protected Auth Routes (require valid JWT) ───────────────────────────────
+// ─── Protected Auth Routes (require valid JWT) — must be before app.route() ──
 app.use('/auth/logout', authMiddleware)
 app.use('/auth/me', authMiddleware)
+
+// ─── Auth Routes ─────────────────────────────────────────────────────────────
+app.route('/auth', userController)
 
 // ─── Global Error Handler ────────────────────────────────────────────────────
 app.onError((err, c) => {

@@ -6,15 +6,20 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-      - /app/.next
     environment:
       - NODE_ENV=development
+      # Enable polling for HMR — required on Windows Docker bind-mounts
+      # (inotify file events are not forwarded from the host)
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=500
+      - WATCHPACK_POLLING=true
     depends_on:
       api:
         condition: service_started
 
   api:
     build: ./backend
+    # --hot enables Bun's built-in file watcher / hot-reload
     command: bun run --hot src/index.ts
     ports:
       - "3001:3001"
@@ -50,10 +55,13 @@ services:
 
   ml:
     build: ./ml-services
+    # fastapi dev already enables auto-reload on file changes
+    command: uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
     ports:
       - "8001:8000"
     volumes:
-      - ./ml-services:/app
+      # Mount source so FastAPI reloader picks up changes without rebuild
+      - ./ml-services/app:/app/app
     environment:
       - PYTHONUNBUFFERED=1
 
